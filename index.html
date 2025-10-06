@@ -8,36 +8,40 @@
   <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
-  <!-- Écran PRESS START (menu uniquement) -->
+  <!-- Overlay PRESS START (bloque les clics tant qu’on n’a pas interagi) -->
   <div id="start-screen"><h1 class="press-start">PRESS START</h1></div>
 
-  <header class="header">
-    <div class="brand">FIGHTSHIFT</div>
-    <nav class="nav">
-      <button class="btn btn-ghost" onclick="location.href='rules.html'">Règles</button>
-      <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
-      <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
-    </nav>
-  </header>
+  <div class="page">
+    <header class="header">
+      <div class="brand">FIGHTSHIFT</div>
+      <nav class="nav">
+        <button class="btn btn-ghost" onclick="location.href='rules.html'">Règles</button>
+        <button class="btn btn-ghost" onclick="location.href='roster.html'">Roster</button>
+        <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
+      </nav>
+    </header>
 
-  <main class="container">
-    <div id="main-content" class="stack" style="display:none">
-      <h1>Mode Arcade</h1>
-      <div class="panel" style="max-width:720px">
-        <p>Choisis où aller :</p>
-        <div class="stack">
-          <button class="btn" onclick="location.href='rules.html'">Lire les règles</button>
-          <button class="btn" onclick="location.href='roster_static.html'">Voir le roster</button>
-          <button class="btn" onclick="location.href='fight.html'">Lancer la démo combat</button>
+    <main class="container">
+      <div id="main-content" class="stack" style="display:none">
+        <h1>Mode Arcade</h1>
+        <div class="panel" style="max-width:720px">
+          <p>Choisis où aller :</p>
+          <div class="stack">
+            <button class="btn" onclick="location.href='rules.html'">Lire les règles</button>
+            <button class="btn" onclick="location.href='roster.html'">Voir le roster</button>
+            <button class="btn" onclick="location.href='fight.html'">Lancer la démo combat</button>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 
+  <!-- Musique -->
   <audio id="bg-music" loop>
     <source src="techno_syndrome.mp3" type="audio/mpeg" />
   </audio>
   <script src="shared-audio.js"></script>
+
   <script>
     const startScreen = document.getElementById('start-screen');
     const mainContent = document.getElementById('main-content');
@@ -46,12 +50,14 @@
     const hasPlayedBefore = localStorage.getItem('musicPlaying') === 'true';
     const hasInteracted = localStorage.getItem('userInteracted') === 'true';
 
+    // Si l’utilisateur a déjà interagi : pas de PRESS START, on affiche direct le menu
     if (hasPlayedBefore && hasInteracted) {
       startScreen.style.display = 'none';
       mainContent.style.display = 'flex';
       window.sharedAudio.tryResume(music);
     }
 
+    // Premier clic → lance la musique + révèle le menu
     startScreen.addEventListener('click', () => {
       startScreen.style.display = 'none';
       mainContent.style.display = 'flex';
