@@ -7,26 +7,18 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="favicon.png" />
   <style>
-    /* Petites touches spécifiques à la page roster */
     .grid.roster { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
     .ability-list { margin-top: 10px; font-size: 12px; text-align: left; }
     .error { background: rgba(255,0,0,.15); border: 2px solid rgba(255,0,0,.35); padding: 12px; border-radius: 12px; }
+
     /* Modal */
-    .modal {
-      position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-      background: rgba(0,0,0,.6); z-index: 10001; padding: 20px;
-    }
+    .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.6); z-index: 10001; padding: 20px; }
     .modal.open { display: flex; }
-    .modal-card {
-      width: min(820px, 95vw); background: rgba(0,0,0,.45); border: 2px solid var(--ring);
-      border-radius: 16px; box-shadow: 0 0 18px var(--ring2); padding: 18px; text-align: left;
-      max-height: 85vh; overflow: auto;
-    }
+    .modal-card { width: min(820px, 95vw); background: rgba(0,0,0,.45); border: 2px solid var(--ring);
+      border-radius: 16px; box-shadow: 0 0 18px var(--ring2); padding: 18px; text-align: left; max-height: 85vh; overflow: auto; }
     .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .close-x {
-      border: 2px solid var(--neon); background: #000; color: var(--neon); border-radius: 10px;
-      padding: 8px 12px; cursor: pointer; box-shadow: 0 0 5px var(--neon);
-    }
+    .close-x { border: 2px solid var(--neon); background: #000; color: var(--neon); border-radius: 10px; padding: 8px 12px; cursor: pointer; box-shadow: 0 0 5px var(--neon); }
     .close-x:hover { background: var(--neon); color: #000; }
   </style>
 </head>
@@ -66,11 +58,9 @@
   <script>
     window.sharedAudio.tryResume(document.getElementById('bg-music'));
 
-    const colorBadge = (c) => {
-      if (c === 'red')  return '<span class="badge color-red">ROUGE</span>';
-      if (c === 'blue') return '<span class="badge color-blue">BLEU</span>';
-      return '<span class="badge color-green">VERT</span>';
-    };
+    const colorBadge = (c) => c==='red' ? '<span class="badge color-red">ROUGE</span>'
+                        : c==='blue'? '<span class="badge color-blue">BLEU</span>'
+                        : '<span class="badge color-green">VERT</span>';
 
     const rosterGrid = document.getElementById('rosterGrid');
     const errorBox = document.getElementById('error');
@@ -85,7 +75,6 @@
 
     let ROSTER = [];
 
-    // Ouvre la fiche en modal + hash #id (deep-link)
     function openModalById(id) {
       const ch = ROSTER.find(x => x.id === id);
       if (!ch) return;
@@ -97,17 +86,14 @@
       document.body.style.overflow = 'hidden';
       history.replaceState(null, '', `#${ch.id}`);
     }
-
     function closeModal() {
       modal.classList.remove('open');
       document.body.style.overflow = '';
-      // retire le hash si présent
       if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     }
-
     closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modal.classList.contains('open')) closeModal(); });
 
     async function loadRoster() {
       try {
@@ -119,7 +105,7 @@
         ROSTER.forEach(ch => {
           const el = document.createElement('article');
           el.className = 'card';
-          el.tabIndex = 0; // focusable
+          el.tabIndex = 0;
           el.setAttribute('role', 'button');
           el.setAttribute('aria-label', `Ouvrir la fiche de ${ch.name}`);
           el.innerHTML = `
@@ -128,24 +114,23 @@
             <p>${ch.short}</p>
             <div class="ability-list"><em>Compétences :</em><ul>${ch.abilities.map(a => `<li>${a}</li>`).join('')}</ul></div>
           `;
-          el.addEventListener('click', () => openModalById(ch.id));
-          el.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openModalById(ch.id); }
-          });
+          el.addEventListener('click', ()=> openModalById(ch.id));
+          el.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); openModalById(ch.id); }});
           rosterGrid.appendChild(el);
         });
 
-        // Deep-link : ouvrir automatiquement si #id dans l'URL
+        // Deep-link
         if (location.hash) {
-          const id = location.hash.replace('#', '').trim();
+          const id = location.hash.slice(1);
           if (id) openModalById(id);
         }
       } catch (err) {
         errorBox.style.display = 'block';
-        errorBox.textContent = `Erreur de chargement du roster.json : ${err.message}. Vérifie que le fichier est bien à la racine.`;
+        errorBox.textContent = `Erreur de chargement du roster.json : ${err.message}`;
+        // Fallback vers la version statique si tu la remets plus tard :
+        // setTimeout(()=>{ window.location.href = 'roster_static.html'; }, 800);
       }
     }
-
     loadRoster();
   </script>
 </body>
