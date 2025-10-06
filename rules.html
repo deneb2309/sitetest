@@ -1,52 +1,50 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>FIGHTSHIFT — Règles</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
-  <div id="main-content">
+  <header class="header">
+    <div class="brand">FIGHTSHIFT</div>
+    <nav class="nav">
+      <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
+      <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
+      <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
+    </nav>
+  </header>
+
+  <main class="container stack">
     <h1>Règles du Mode Arcade</h1>
 
     <section class="panel">
       <h2>🟢🔵🔴 Système de Couleurs</h2>
-      <p>Chaque personnage appartient à une couleur :</p>
       <ul class="bullet">
-        <li><span class="badge color-green">VERT</span> est super efficace contre <span class="badge color-blue">BLEU</span></li>
-        <li><span class="badge color-blue">BLEU</span> est super efficace contre <span class="badge color-red">ROUGE</span></li>
-        <li><span class="badge color-red">ROUGE</span> est super efficace contre <span class="badge color-green">VERT</span></li>
+        <li><span class="badge color-green">VERT</span> > <span class="badge color-blue">BLEU</span></li>
+        <li><span class="badge color-blue">BLEU</span> > <span class="badge color-red">ROUGE</span></li>
+        <li><span class="badge color-red">ROUGE</span> > <span class="badge color-green">VERT</span></li>
       </ul>
     </section>
 
     <section class="panel">
-      <h2>🛠️ Capacités des Personnages</h2>
-      <p>Chaque personnage dispose de <strong>jusqu’à 5 capacités</strong>, qui peuvent être :</p>
-      <ul class="bullet">
-        <li>🌀 Compétences</li>
-        <li>🌍 Extensions de territoire</li>
-        <li>💥 Ultimes</li>
-        <li>🔒 Passifs</li>
-      </ul>
+      <h2>🛠️ Capacités</h2>
+      <p>Jusqu’à 5 capacités par personnage : compétences, extensions de territoire, ultimes, passifs.</p>
     </section>
 
     <section class="panel">
-      <h2>🎮 Structure du Mode Arcade</h2>
-      <p>Le jeu comporte <strong>4 actes</strong>, chacun constitué de <strong>10 niveaux</strong>. Le dernier niveau de chaque acte est un <strong>boss rush</strong>.</p>
+      <h2>🎮 Progression</h2>
+      <p>4 actes, 10 niveaux chacun. Le dernier niveau est un boss rush.</p>
     </section>
-
-    <nav><button onclick="location.href='index.html'">⬅️ Retour au menu</button></nav>
-  </div>
+  </main>
 
   <audio id="bg-music" loop>
-    <source src="techno_syndrome.mp3" type="audio/mpeg">
+    <source src="techno_syndrome.mp3" type="audio/mpeg" />
   </audio>
   <script src="shared-audio.js"></script>
-  <script>
-    const music = document.getElementById("bg-music");
-    window.sharedAudio.tryResume(music);
-  </script>
+  <script> window.sharedAudio.tryResume(document.getElementById('bg-music')); </script>
 </body>
 </html>
+

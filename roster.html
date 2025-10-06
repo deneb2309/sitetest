@@ -1,76 +1,151 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>FIGHTSHIFT — Roster</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
   <style>
-    .roster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;width:100%;max-width:1100px;margin:30px auto;}
-    .card{padding:16px;border-radius:12px;background:rgba(0,0,0,0.4);border:2px solid rgba(0,255,255,0.12);box-shadow:0 0 10px rgba(0,255,255,0.06);transition:transform .2s,box-shadow .2s;cursor:pointer}
-    .card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 0 24px rgba(0,255,255,0.2)}
-    .name{font-size:14px;margin-bottom:8px}
-    .ability-list{ text-align:left; margin-top:10px; font-size:12px;}
+    /* Petites touches spécifiques à la page roster */
+    .grid.roster { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .ability-list { margin-top: 10px; font-size: 12px; text-align: left; }
+    .error { background: rgba(255,0,0,.15); border: 2px solid rgba(255,0,0,.35); padding: 12px; border-radius: 12px; }
+    /* Modal */
+    .modal {
+      position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.6); z-index: 10001; padding: 20px;
+    }
+    .modal.open { display: flex; }
+    .modal-card {
+      width: min(820px, 95vw); background: rgba(0,0,0,.45); border: 2px solid var(--ring);
+      border-radius: 16px; box-shadow: 0 0 18px var(--ring2); padding: 18px; text-align: left;
+      max-height: 85vh; overflow: auto;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .close-x {
+      border: 2px solid var(--neon); background: #000; color: var(--neon); border-radius: 10px;
+      padding: 8px 12px; cursor: pointer; box-shadow: 0 0 5px var(--neon);
+    }
+    .close-x:hover { background: var(--neon); color: #000; }
   </style>
 </head>
 <body>
-  <div id="main-content">
+  <header class="header">
+    <div class="brand">FIGHTSHIFT</div>
+    <nav class="nav">
+      <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
+      <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
+    </nav>
+  </header>
+
+  <main class="container">
     <h1>Roster — FIGHTSHIFT</h1>
-    <div id="grid" class="roster-grid"></div>
-    <nav><button onclick="location.href='index.html'">⬅️ Retour</button></nav>
+    <section id="rosterGrid" class="grid roster" aria-live="polite"></section>
+    <div id="error" class="error" style="display:none"></div>
+  </main>
+
+  <!-- Musique -->
+  <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg" /></audio>
+  <script src="shared-audio.js"></script>
+
+  <!-- Modal fiche perso -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle" style="margin:0"></h2>
+        <button id="closeModal" class="close-x" aria-label="Fermer la fiche">Fermer</button>
+      </div>
+      <p id="modalMeta" class="meta" style="margin:8px 0 12px 0"></p>
+      <p id="modalShort"></p>
+      <h2 style="margin-top:16px">Compétences</h2>
+      <ul id="modalAbilities" class="bullet"></ul>
+    </div>
   </div>
 
-  <audio id="bg-music" loop>
-    <source src="techno_syndrome.mp3" type="audio/mpeg">
-  </audio>
-  <script src="shared-audio.js"></script>
   <script>
-    const music = document.getElementById('bg-music');
-    window.sharedAudio.tryResume(music);
+    window.sharedAudio.tryResume(document.getElementById('bg-music'));
 
-    const colorBadge = (c)=> {
-      if(c==='red') return '<span class="badge color-red">ROUGE</span>';
-      if(c==='blue') return '<span class="badge color-blue">BLEU</span>';
+    const colorBadge = (c) => {
+      if (c === 'red')  return '<span class="badge color-red">ROUGE</span>';
+      if (c === 'blue') return '<span class="badge color-blue">BLEU</span>';
       return '<span class="badge color-green">VERT</span>';
     };
-    async function loadRoster(){
-      const res = await fetch('roster.json');
-      const data = await res.json();
-      const grid = document.getElementById('grid');
-      data.forEach(ch => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="name"><strong>${ch.name}</strong> ${colorBadge(ch.color)}</div>
-          <div class="hp">PV : ${ch.hp_max}</div>
-          <div class="short">${ch.short}</div>
-          <div class="ability-list"><em>Compétences :</em><ul>${ch.abilities.map(a=>'<li>'+a+'</li>').join('')}</ul></div>
-        `;
-        card.addEventListener('click', ()=> showDetails(ch));
-        grid.appendChild(card);
-      });
+
+    const rosterGrid = document.getElementById('rosterGrid');
+    const errorBox = document.getElementById('error');
+
+    // Modal refs
+    const modal = document.getElementById('modal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalShort = document.getElementById('modalShort');
+    const modalAbilities = document.getElementById('modalAbilities');
+
+    let ROSTER = [];
+
+    // Ouvre la fiche en modal + hash #id (deep-link)
+    function openModalById(id) {
+      const ch = ROSTER.find(x => x.id === id);
+      if (!ch) return;
+      modalTitle.innerHTML = `${ch.name} ${colorBadge(ch.color)}`;
+      modalMeta.textContent = `PV : ${ch.hp_max}`;
+      modalShort.textContent = ch.short;
+      modalAbilities.innerHTML = ch.abilities.map(a => `<li>${a}</li>`).join('');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      history.replaceState(null, '', `#${ch.id}`);
     }
-    function showDetails(ch){
-      const w = window.open('', '_blank');
-      const html = `<!doctype html>
-      <html lang='fr'><head>
-      <meta charset='utf-8'><title>${ch.name} — FIGHTSHIFT</title>
-      <link rel='stylesheet' href='style.css'>
-      <style>body{{padding:40px}} .details{{max-width:800px;margin:0 auto;background:rgba(0,0,0,0.45);padding:20px;border-radius:12px}}</style>
-      </head><body>
-      <div class='details'>
-        <h1>${ch.name} ${colorBadge(ch.color)}</h1>
-        <p><strong>PV :</strong> ${ch.hp_max}</p>
-        <p>${ch.short}</p>
-        <h3>Compétences</h3>
-        <ul>${ch.abilities.map(a=>'<li>'+a+'</li>').join('')}</ul>
-        <button onclick="window.close()">Fermer</button>
-      </div>
-      </body></html>`;
-      w.document.write(html);
-      w.document.close();
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      // retire le hash si présent
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+    async function loadRoster() {
+      try {
+        const res = await fetch('roster.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        ROSTER = await res.json();
+
+        rosterGrid.innerHTML = '';
+        ROSTER.forEach(ch => {
+          const el = document.createElement('article');
+          el.className = 'card';
+          el.tabIndex = 0; // focusable
+          el.setAttribute('role', 'button');
+          el.setAttribute('aria-label', `Ouvrir la fiche de ${ch.name}`);
+          el.innerHTML = `
+            <div class="name"><strong>${ch.name}</strong> ${colorBadge(ch.color)}</div>
+            <div class="meta">PV : ${ch.hp_max}</div>
+            <p>${ch.short}</p>
+            <div class="ability-list"><em>Compétences :</em><ul>${ch.abilities.map(a => `<li>${a}</li>`).join('')}</ul></div>
+          `;
+          el.addEventListener('click', () => openModalById(ch.id));
+          el.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openModalById(ch.id); }
+          });
+          rosterGrid.appendChild(el);
+        });
+
+        // Deep-link : ouvrir automatiquement si #id dans l'URL
+        if (location.hash) {
+          const id = location.hash.replace('#', '').trim();
+          if (id) openModalById(id);
+        }
+      } catch (err) {
+        errorBox.style.display = 'block';
+        errorBox.textContent = `Erreur de chargement du roster.json : ${err.message}. Vérifie que le fichier est bien à la racine.`;
+      }
+    }
+
     loadRoster();
   </script>
 </body>

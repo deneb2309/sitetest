@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>FIGHTSHIFT — Démo Combat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
-    .arena{max-width:900px;margin:0 auto;background:rgba(0,0,0,.35);border:2px solid rgba(0,255,255,.15);padding:20px;border-radius:16px;box-shadow:0 0 10px rgba(0,255,255,.1)}
+    .arena{max-width:900px;margin:0 auto;background:var(--panel);border:2px solid var(--ring);padding:20px;border-radius:16px;box-shadow:0 0 10px var(--ring2)}
     .row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:10px 0}
     .col{flex:1;min-width:280px;background:rgba(0,0,0,.3);padding:14px;border-radius:12px;border:1px solid rgba(0,255,255,.15)}
     .hpbar{height:16px;background:#111;border-radius:10px;overflow:hidden;border:1px solid #0ff}
@@ -15,45 +15,65 @@
     .hp-blue{background:linear-gradient(90deg,#00c6ff,#0072ff)}
     .hp-green{background:linear-gradient(90deg,#00ff7a,#00c853)}
     .log{min-height:60px;text-align:left;background:rgba(0,0,0,.25);padding:10px;border-radius:10px;border:1px solid rgba(0,255,255,.1)}
-    select{padding:8px;border:2px solid #00fff7;background:#000;color:#00fff7;border-radius:8px}
+    select{padding:8px;border:2px solid var(--neon);background:#000;color:var(--neon);border-radius:8px}
   </style>
 </head>
 <body>
-  <div id="main-content">
+  <header class="header">
+    <div class="brand">FIGHTSHIFT</div>
+    <nav class="nav">
+      <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
+      <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
+    </nav>
+  </header>
+
+  <main class="container">
     <h1>Démo Combat — FIGHTSHIFT</h1>
     <div class="arena">
       <div class="row">
         <div class="col">
-          <h3>Ton personnage</h3>
+          <h2>Ton personnage</h2>
           <select id="player"></select>
           <div id="pInfo"></div>
           <div class="hpbar"><div id="pHP" class="hpfill"></div></div>
         </div>
         <div class="col">
-          <h3>Adversaire</h3>
+          <h2>Adversaire</h2>
           <select id="enemy"></select>
           <div id="eInfo"></div>
           <div class="hpbar"><div id="eHP" class="hpfill"></div></div>
         </div>
       </div>
       <div class="row">
-        <button id="randEnemy">🎲 Ennemi aléatoire</button>
-        <button id="start">▶️ Lancer le combat</button>
-        <button onclick="location.href='index.html'">⬅️ Retour</button>
+        <button class="btn" id="randEnemy">🎲 Ennemi aléatoire</button>
+        <button class="btn" id="start">▶️ Lancer le combat</button>
+        <button class="btn btn-ghost" onclick="location.href='index.html'">⬅️ Retour</button>
       </div>
       <div class="log" id="log"></div>
     </div>
-  </div>
+  </main>
 
   <audio id="bg-music" loop>
-    <source src="techno_syndrome.mp3" type="audio/mpeg">
+    <source src="techno_syndrome.mp3" type="audio/mpeg" />
   </audio>
-
+  <script src="shared-audio.js"></script>
   <script>
-    const ROSTER = [{"id": "arthur", "name": "Arthur", "color": "red", "hp_max": 600, "short": "Tank offensif maniant le feu ; renvoie et contre les attaques.", "abilities": ["Ataraxia (arme)", "Raw Strength (lancer d'objet)", "Scorching Hands (3 attaques au choix)", "God's Judgment (ultime)"]}, {"id": "cahara", "name": "Cahara", "color": "blue", "hp_max": 450, "short": "Maître de la magie du sang : soins, réanimations et contrôle de terrain.", "abilities": ["Blood Geyser", "Blood Rain (zone de flaques)", "Arsenal of a God", "Decem Milia Perfecta Sectio (ultime)"]}, {"id": "lazarus", "name": "Lazarus", "color": "green", "hp_max": 600, "short": "Psychique/exécuteur : contrôle mental, exécutions et manipulation des effets.", "abilities": ["Heaven Pierce Her (ultime)", "Raw, Stained, Brutal (maîtrise mentale)", "Mirror of the World (vision inversée)", "If I Am With You (buff alliés)"]}, {"id": "signus", "name": "Signus", "color": "blue", "hp_max": 550, "short": "Profundi contrôlant ombres et invocations abyssales.", "abilities": ["Heart of the Deep (ultime / zone)", "Void Drifter / Void Dragon", "Silver Knife / Unholy Frenzy", "Call of the Abyss (invocations)"]}, {"id": "marco", "name": "Marco", "color": "green", "hp_max": 500, "short": "Colosse de pierre : dégâts de zone et formes surpuissantes.", "abilities": ["A One Trip to Hell", "Nano Rocks (forme surpuissante)", "Potemmkkiinn (attaque spéciale)", "Rayon Noir"]}, {"id": "jemal", "name": "Jemal", "color": "green", "hp_max": 600, "short": "Manipulateur temporel par la musique : clones, buffs et ralentissements.", "abilities": ["Echo Temporel (clone décalé)", "Téma le Tank (buff/Invincibilité)", "Chant de l'assaisonnement (soin)", "Slow (ralentissement global)"]}, {"id": "kagenami", "name": "Kagenami", "color": "blue", "hp_max": 550, "short": "Assassin des ombres : backstabs, invisibilité et exécutions.", "abilities": ["Backstab (critique dans le dos)", "Arise (réanimation d'ennemis)", "Invisibility (ultime)", "Exécution Sommaire (ultime)"]}, {"id": "samira", "name": "Samira", "color": "red", "hp_max": 400, "short": "Demi-démon agile : armes à feu, transformations et dégâts élevés.", "abilities": ["Charging Slash (dash électrique)", "Devil Trigger (transformation)", "Buster (attaques variées selon la taille)", "Enlace del Trueno (fouets électriques)"]}, {"id": "sam", "name": "S.A.M.", "color": "green", "hp_max": 850, "short": "Construct massif : gravité, provocation et résistances élevées.", "abilities": ["Gravity Shift (zone de plaquage)", "Counter (contre puissant)", "Pressure (passif)", "Fatal Blow (gimmick avec allié)"]}, {"id": "burnice", "name": "Burnice", "color": "red", "hp_max": 500, "short": "Pyromane maître des anomalies de feu et des flaques inflammables.", "abilities": ["Surcharge Pyrique (lance-flammes)", "Juste de l'essence (flaque inflammable)", "Enfer Glorieux (ultime)", "Anomalie d'attribut (boss only)"]}];
+    const ROSTER = [
+      {"id":"arthur","name":"Arthur","color":"red","hp_max":600,"short":"Tank offensif maniant le feu ; renvoie et contre les attaques."},
+      {"id":"cahara","name":"Cahara","color":"blue","hp_max":450,"short":"Magie du sang : soins/rez/contrôle."},
+      {"id":"lazarus","name":"Lazarus","color":"green","hp_max":600,"short":"Psychique/exécuteur : contrôle mental et exécutions."},
+      {"id":"signus","name":"Signus","color":"blue","hp_max":550,"short":"Ombres et invocations abyssales."},
+      {"id":"marco","name":"Marco","color":"green","hp_max":500,"short":"Colosse de pierre, AoE et formes surpuissantes."},
+      {"id":"jemal","name":"Jemal","color":"green","hp_max":600,"short":"Musique/temps : clones, buffs, ralentissements."},
+      {"id":"kagenami","name":"Kagenami","color":"blue","hp_max":550,"short":"Assassin furtif : backstab, invisibilité, exécution."},
+      {"id":"samira","name":"Samira","color":"red","hp_max":400,"short":"Demi-démon : armes à feu, transformation, burst."},
+      {"id":"sam","name":"S.A.M.","color":"green","hp_max":850,"short":"Construct : gravité, provocation, tanking."},
+      {"id":"burnice","name":"Burnice","color":"red","hp_max":500,"short":"Pyromane : anomalies et flaques inflammables."}
+    ];
     const colorAdv = { red: 'green', green: 'blue', blue: 'red' };
+
     const playerSel = document.getElementById('player');
-    const enemySel = document.getElementById('enemy');
+    const enemySel  = document.getElementById('enemy');
     const pInfo = document.getElementById('pInfo');
     const eInfo = document.getElementById('eInfo');
     const pHP = document.getElementById('pHP');
@@ -68,8 +88,7 @@
     }
 
     function updateInfo(){
-      const p = ROSTER[playerSel.value];
-      const e = ROSTER[enemySel.value];
+      const p = ROSTER[playerSel.value], e = ROSTER[enemySel.value];
       pInfo.innerHTML = `<p><strong>${p.name}</strong> [${colorName(p.color)}] — PV ${p.hp_max}</p><p>${p.short}</p>`;
       eInfo.innerHTML = `<p><strong>${e.name}</strong> [${colorName(e.color)}] — PV ${e.hp_max}</p><p>${e.short}</p>`;
       pHP.className = 'hpfill ' + hpClass(p.color);
@@ -80,8 +99,7 @@
     function randEnemy(){ enemySel.value = Math.floor(Math.random()*ROSTER.length); updateInfo(); }
 
     function fight(){
-      const p = ROSTER[playerSel.value];
-      const e = ROSTER[enemySel.value];
+      const p = ROSTER[playerSel.value], e = ROSTER[enemySel.value];
       let pHPv = p.hp_max, eHPv = e.hp_max;
       log.innerHTML = '';
       const base = 120;
@@ -116,7 +134,8 @@
     updateInfo(); randEnemy();
 
     const music = document.getElementById('bg-music');
-    if (localStorage.getItem('musicPlaying') === 'true'){ music.muted=false; music.play().catch(()=>{}); }
+    window.sharedAudio.tryResume(music);
   </script>
 </body>
 </html>
+

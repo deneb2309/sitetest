@@ -1,67 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>FIGHTSHIFT — Menu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
-  <!-- Écran d'intro uniquement sur le menu -->
-  <div id="start-screen">
-    <h1 class="press-start">PRESS START</h1>
-  </div>
+  <!-- Écran PRESS START (menu uniquement) -->
+  <div id="start-screen"><h1 class="press-start">PRESS START</h1></div>
 
-  <!-- Contenu du menu -->
-  <div id="main-content" style="display:none">
-    <h1>FIGHTSHIFT</h1>
-    <nav class="main-menu">
-      <button onclick="location.href='rules.html'">Lire les règles</button>
-      <button onclick="location.href='roster.html'">Voir le roster</button>
-      <button id="reset-audio" style="margin-left:10px">🔄 Réinitialiser l'audio</button>
+  <header class="header">
+    <div class="brand">FIGHTSHIFT</div>
+    <nav class="nav">
+      <button class="btn btn-ghost" onclick="location.href='rules.html'">Règles</button>
+      <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
+      <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
     </nav>
-  </div>
+  </header>
 
-  <!-- Audio global -->
+  <main class="container">
+    <div id="main-content" class="stack" style="display:none">
+      <h1>Mode Arcade</h1>
+      <div class="panel" style="max-width:720px">
+        <p>Choisis où aller :</p>
+        <div class="stack">
+          <button class="btn" onclick="location.href='rules.html'">Lire les règles</button>
+          <button class="btn" onclick="location.href='roster_static.html'">Voir le roster</button>
+          <button class="btn" onclick="location.href='fight.html'">Lancer la démo combat</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <audio id="bg-music" loop>
-    <source src="techno_syndrome.mp3" type="audio/mpeg">
+    <source src="techno_syndrome.mp3" type="audio/mpeg" />
   </audio>
-
   <script src="shared-audio.js"></script>
   <script>
-    // Menu-specific boot with PRESS START
-    const startScreen = document.getElementById("start-screen");
-    const mainContent = document.getElementById("main-content");
-    const music = document.getElementById("bg-music");
+    const startScreen = document.getElementById('start-screen');
+    const mainContent = document.getElementById('main-content');
+    const music = document.getElementById('bg-music');
 
-    // Show PRESS START unless both flags are present
-    const hasPlayedBefore = localStorage.getItem("musicPlaying") === "true";
-    const hasInteracted = localStorage.getItem("userInteracted") === "true";
+    const hasPlayedBefore = localStorage.getItem('musicPlaying') === 'true';
+    const hasInteracted = localStorage.getItem('userInteracted') === 'true';
 
     if (hasPlayedBefore && hasInteracted) {
-      // Auto-show menu and attempt resume (muted fallback handled in shared-audio.js)
-      startScreen.style.display = "none";
-      mainContent.style.display = "block";
+      startScreen.style.display = 'none';
+      mainContent.style.display = 'flex';
       window.sharedAudio.tryResume(music);
     }
 
-    startScreen.addEventListener("click", () => {
-      startScreen.style.display = "none";
-      mainContent.style.display = "block";
-      // mark interaction and play
-      localStorage.setItem("userInteracted", "true");
+    startScreen.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      mainContent.style.display = 'flex';
+      localStorage.setItem('userInteracted','true');
       window.sharedAudio.startAndRemember(music);
-    });
-
-    document.getElementById("reset-audio").addEventListener("click", () => {
-      localStorage.removeItem("musicPlaying");
-      localStorage.removeItem("userInteracted");
-      // Stop music if playing
-      try { music.pause(); music.currentTime = 0; } catch(e){}
-      // Show press start again
-      startScreen.style.display = "flex";
-      mainContent.style.display = "none";
     });
   </script>
 </body>

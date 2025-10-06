@@ -16,16 +16,13 @@ window.sharedAudio = (function(){
     if (!audio) return;
     const played = localStorage.getItem('musicPlaying') === 'true';
     if (played){
-      // Try immediate resume; if blocked, ensure unmute on first interaction
       audio.muted = false;
       audio.play().catch(()=>{
-        // autoplay blocked: start muted, then unmute on interaction
         audio.muted = true;
         audio.play().catch(()=>{});
         userClickUnmute(audio);
       });
     } else {
-      // Not started yet: keep it silent but prepare resume on interaction
       audio.muted = true;
       try { audio.play().catch(()=>{}); } catch(e){}
       userClickUnmute(audio);
@@ -39,7 +36,6 @@ window.sharedAudio = (function(){
       localStorage.setItem('musicPlaying','true');
       localStorage.setItem('userInteracted','true');
     }).catch(()=>{
-      // If still blocked, fallback to muted then unmute on interaction
       audio.muted = true;
       audio.play().catch(()=>{});
       userClickUnmute(audio);
