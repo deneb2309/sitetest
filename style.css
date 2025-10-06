@@ -1,44 +1,54 @@
 /* === POLICE & VARIABLES === */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-:root{
+:root {
   --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
-  --neon:#00fff7; --pink:#ff00cc; --dark:#000; --panel: rgba(0,0,0,.35);
-  --ring: rgba(0,255,255,.15); --ring2: rgba(0,255,255,.1);
-  --radius: 40px; --radius-sm: 12px;
-  --pad: 20px; --gap: 20px;
+  --neon:#00fff7; --pink:#ff00cc; --dark:#000;
+  --panel: rgba(0,0,0,.35); --ring: rgba(0,255,255,.15);
+  --ring2: rgba(0,255,255,.1); --radius: 40px;
+  --radius-sm: 12px; --pad: 20px; --gap: 20px;
 }
 
-/* === PAGE (écran arrondi) === */
-html, body { margin:0; padding:0; height:100%; background:#000; display:flex; justify-content:center; align-items:center; overflow:hidden; }
-body{
-  width:95vw; height:95vh;
+/* === PAGE (fond et structure) === */
+html, body { height:auto; min-height:100%; margin:0; padding:0; background:#000; }
+
+body {
+  width:95vw;
+  min-height:95vh; /* ✅ plus de height fixe */
   background: linear-gradient(160deg, var(--bg1), var(--bg2), var(--bg3));
-  font-family:'Press Start 2P', cursive; color:var(--neon); text-align:center;
+  font-family:'Press Start 2P', cursive;
+  color:var(--neon);
+  text-align:center;
   border-radius: var(--radius);
   box-shadow: 0 0 40px #000 inset, 0 0 60px rgba(255,0,204,.2), 0 0 0 30px #1a1a1a;
-  position:relative; display:flex; flex-direction:column;
-  padding:0; overflow:auto;
-  opacity:0; transform:scale(1.2);
+  display:flex;
+  flex-direction:column;
+  overflow:auto;
   animation:screenBoot 1.2s ease-out forwards;
+  position:relative;
+  opacity:0; transform:scale(1.2);
 }
 
 /* === FOND grille + scanlines === */
-body::before{
-  content:''; position:fixed; inset:0;
-  background-image: linear-gradient(#00fff799 1px, transparent 1px), linear-gradient(to right, #00fff799 1px, transparent 1px);
-  background-size: 50px 50px; z-index:-1; animation:scrollGrid 10s linear infinite; opacity:.08;
+body::before {
+  content:''; position:absolute; inset:0; /* ✅ suit la hauteur */
+  background-image: linear-gradient(#00fff799 1px, transparent 1px),
+                    linear-gradient(to right, #00fff799 1px, transparent 1px);
+  background-size:50px 50px;
+  z-index:-1; opacity:.08;
+  animation:scrollGrid 10s linear infinite;
 }
 @keyframes scrollGrid{ from{background-position:0 0} to{background-position:0 100px} }
 
-body::after{
-  content:''; position:fixed; inset:0;
-  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.05), rgba(0,0,0,.05) 1px, transparent 1px, transparent 2px);
+body::after {
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.05),
+  rgba(0,0,0,.05) 1px, transparent 1px, transparent 2px);
   z-index:999; pointer-events:none;
 }
 
 /* === HEADER STICKY === */
-.header{
+.header {
   position:sticky; top:0; z-index:998;
   display:flex; align-items:center; justify-content:space-between;
   padding: 14px 18px;
@@ -46,141 +56,83 @@ body::after{
   border-bottom: 2px solid var(--ring);
   backdrop-filter: blur(4px);
 }
-.brand{
-  font-size:16px; color:var(--pink);
-  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink);
+.brand { font-size:16px; color:var(--pink);
+  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink); }
+.nav { display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+
+/* === GÉNÉRAL === */
+.page {
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
 }
-.nav{ display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
 
-/* === COMPOSANTS GLOBAUX === */
-.container{ width:100%; max-width:1100px; margin:0 auto; padding: var(--pad); }
-.stack{ display:flex; flex-direction:column; gap: var(--gap); align-items:center; }
+main.container {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  padding-bottom:40px;
+  padding-top:30px;
+}
 
-h1{ font-size:24px; color:var(--pink); text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink); margin: 10px 0 6px; }
-h2{ font-size:14px; color:#fff; margin: 6px 0; }
-p{ font-size:12px; line-height:1.75; color:#e3f7f6; margin:0; text-shadow:0 0 3px #000; }
+.grid.roster {
+  align-content:flex-start;
+  padding-bottom:40px;
+  display:grid;
+  gap:16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+}
 
-.btn{
+/* === COMPOSANTS === */
+h1 { font-size:24px; color:var(--pink);
+  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink); }
+p { font-size:12px; color:#e3f7f6; }
+
+.btn {
   background: var(--dark); color: var(--neon);
   border:2px solid var(--neon); padding:12px 18px; border-radius:10px;
   text-transform:uppercase; font-size:12px; cursor:pointer;
-  box-shadow:0 0 5px var(--neon); transition: transform .2s, box-shadow .2s, background .2s, color .2s;
+  box-shadow:0 0 5px var(--neon); transition: all .2s;
 }
-.btn:hover{ background: var(--neon); color:#000; box-shadow:0 0 10px var(--neon), 0 0 20px var(--neon); transform: translateY(-2px) scale(1.03); }
-.btn-ghost{ border-color: var(--ring); color:#fff; }
-.btn-ghost:hover{ border-color:var(--neon); }
-.btn:focus, a:focus{ outline:none; box-shadow: 0 0 0 3px rgba(0,255,255,.4); }
-
-.badge{ display:inline-block; padding:6px 10px; border-radius:8px; font-size:10px; font-weight:700; color:#000; }
-.color-red{ background: linear-gradient(90deg,#ff416c,#ff4b2b); color:#fff; }
-.color-blue{ background: linear-gradient(90deg,#00c6ff,#0072ff); color:#fff; }
-.color-green{ background: linear-gradient(90deg,#00ff7a,#00c853); color:#000; }
-
-.panel{
-  background: var(--panel); border:2px solid var(--ring);
-  padding: 16px; border-radius:16px; width:100%;
-  box-shadow: 0 0 10px var(--ring2);
+.btn:hover {
+  background: var(--neon); color:#000;
+  box-shadow:0 0 10px var(--neon), 0 0 20px var(--neon);
+  transform:scale(1.03);
 }
-.panel h2{ margin-bottom:10px; }
-ul.bullet{ list-style:none; padding:0; margin:0; }
-ul.bullet li{ margin:8px 0; }
+.btn-ghost { border-color: var(--ring); color:#fff; }
+.btn-ghost:hover { border-color:var(--neon); }
 
-/* === GRILLES === */
-.grid{ display:grid; gap:16px; }
-.grid.roster{ grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+.badge { display:inline-block; padding:6px 10px; border-radius:8px; font-size:10px; }
+.color-red{ background:linear-gradient(90deg,#ff416c,#ff4b2b); color:#fff; }
+.color-blue{ background:linear-gradient(90deg,#00c6ff,#0072ff); color:#fff; }
+.color-green{ background:linear-gradient(90deg,#00ff7a,#00c853); color:#000; }
 
-.card{
-  background: rgba(0,0,0,.4); border:2px solid rgba(0,255,255,.12);
-  border-radius: var(--radius-sm); padding:16px; text-align:left;
+.card {
+  background: rgba(0,0,0,.4);
+  border:2px solid rgba(0,255,255,.12);
+  border-radius: var(--radius-sm);
+  padding:16px;
+  text-align:left;
   box-shadow:0 0 10px rgba(0,255,255,.06);
   transition: transform .2s, box-shadow .2s;
 }
-.card:hover{ transform: translateY(-4px); box-shadow:0 0 24px rgba(0,255,255,.2); }
-.card .name{ font-size:14px; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
-.card .meta{ font-size:11px; opacity:.85; }
+.card:hover { transform: translateY(-4px); box-shadow:0 0 24px rgba(0,255,255,.2); }
+.card .name { font-size:14px; margin-bottom:8px; display:flex; gap:10px; align-items:center; }
 
-/* === MENU plein écran (accueil) === */
-#start-screen{ position:absolute; inset:0; background:#000; display:flex; align-items:center; justify-content:center; z-index:10000; cursor:pointer; }
-.press-start{ color:var(--neon); font-size:20px; text-shadow:0 0 10px var(--neon), 0 0 20px var(--neon); animation: blink 1s infinite; }
+/* === ÉCRAN PRESS START === */
+#start-screen {
+  position:absolute; inset:0; background:#000;
+  display:flex; align-items:center; justify-content:center;
+  z-index:10000; cursor:pointer;
+}
+.press-start { color:var(--neon); font-size:20px;
+  text-shadow:0 0 10px var(--neon), 0 0 20px var(--neon); animation: blink 1s infinite; }
 @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:0} }
 
-/* === ANIMATION D'ALLUMAGE === */
-@keyframes screenBoot{
-  0%{opacity:0; transform:scale(1.2) rotateX(80deg); filter:brightness(0) blur(40px);}
-  70%{opacity:1; transform:scale(1.05) rotateX(10deg); filter:brightness(1.5) blur(2px);}
-  100%{opacity:1; transform:scale(1) rotateX(0deg); filter:brightness(1) blur(0);}
-}
-
-/* === RESPONSIVE PETIT ÉCRAN === */
-@media (max-width: 460px){
-  h1{ font-size:18px; }
-  .brand{ font-size:14px; }
-  .btn{ padding:10px 14px; font-size:11px; }
-}
-
-/* === PATCH MENU / LAYOUT === */
-.page{
-  display:flex;
-  flex-direction:column;
-  height:100%;
-  width:100%;
-}
-
-main.container{
-  flex:1;                     /* prend toute la hauteur dispo sous le header */
-  display:flex;
-  align-items:center;         /* centre verticalement */
-  justify-content:center;     /* centre horizontalement */
-  padding-top: 16px;          /* petit souffle sous le header sticky */
-}
-
-#main-content{
-  display:flex;
-  flex-direction:column;
-  gap: 20px;
-  align-items:center;         /* centrer les boutons et le titre */
-}
-
-/* Optionnel : éviter que le header se planque sous l'overlay
-   (on garde PRESS START au-dessus pour forcer l'interaction) */
-#start-screen{ z-index: 10000; }
-.header{ z-index: 9999; }
-
-/* === PATCH : le contenu s'étend jusqu'en bas de la page === */
-
-/* le conteneur principal remplit la hauteur dispo */
-html, body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-/* la page complète occupe toute la hauteur visible */
-.page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* le contenu prend toute la place sous le header */
-main.container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-bottom: 40px; /* petit espace sous le contenu */
-}
-
-/* le roster garde son espacement même en bas */
-.grid.roster {
-  flex-grow: 1;
-  align-content: flex-start;
-  padding-bottom: 40px;
-}
-
-body::before {
-  background-attachment: fixed;
+@keyframes screenBoot {
+  0%{opacity:0; transform:scale(1.2) rotateX(80deg);}
+  70%{opacity:1; transform:scale(1.05) rotateX(10deg);}
+  100%{opacity:1; transform:scale(1);}
 }

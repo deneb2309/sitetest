@@ -1,50 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>FIGHTSHIFT — Règles</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
-  <header class="header">
-    <div class="brand">FIGHTSHIFT</div>
-    <nav class="nav">
-      <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
-      <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
-      <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
-    </nav>
-  </header>
+  <div class="page">
+    <header class="header">
+      <div class="brand">FIGHTSHIFT</div>
+      <nav class="nav">
+        <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
+        <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
+        <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
+      </nav>
+    </header>
 
-  <main class="container stack">
-    <h1>Règles du Mode Arcade</h1>
+    <main class="container stack">
+      <h1>Règles du Mode Arcade</h1>
 
-    <section class="panel">
-      <h2>🟢🔵🔴 Système de Couleurs</h2>
-      <ul class="bullet">
-        <li><span class="badge color-green">VERT</span> > <span class="badge color-blue">BLEU</span></li>
-        <li><span class="badge color-blue">BLEU</span> > <span class="badge color-red">ROUGE</span></li>
-        <li><span class="badge color-red">ROUGE</span> > <span class="badge color-green">VERT</span></li>
-      </ul>
-    </section>
+      <section class="panel">
+        <h2>🟢🔵🔴 Système de Couleurs</h2>
+        <ul class="bullet">
+          <li><span class="badge color-green">VERT</span> > <span class="badge color-blue">BLEU</span></li>
+          <li><span class="badge color-blue">BLEU</span> > <span class="badge color-red">ROUGE</span></li>
+          <li><span class="badge color-red">ROUGE</span> > <span class="badge color-green">VERT</span></li>
+        </ul>
+      </section>
 
-    <section class="panel">
-      <h2>🛠️ Capacités</h2>
-      <p>Jusqu’à 5 capacités par personnage : compétences, extensions de territoire, ultimes, passifs.</p>
-    </section>
+      <section class="panel">
+        <h2>🛠️ Capacités</h2>
+        <p>Chaque personnage peut avoir jusqu’à 5 capacités : compétences, extensions, ultimes ou passifs.</p>
+      </section>
 
-    <section class="panel">
-      <h2>🎮 Progression</h2>
-      <p>4 actes, 10 niveaux chacun. Le dernier niveau est un boss rush.</p>
-    </section>
-  </main>
+      <section class="panel">
+        <h2>🎮 Progression</h2>
+        <p>4 actes, 10 niveaux chacun, avec un boss rush en fin d’acte.</p>
+      </section>
+    </main>
+  </div>
 
-  <audio id="bg-music" loop>
-    <source src="techno_syndrome.mp3" type="audio/mpeg" />
-  </audio>
+  <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg"></audio>
   <script src="shared-audio.js"></script>
-  <script> window.sharedAudio.tryResume(document.getElementById('bg-music')); </script>
+  <script>window.sharedAudio.tryResume(document.getElementById('bg-music'));</script>
 </body>
 </html>
 

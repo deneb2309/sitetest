@@ -2,18 +2,18 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>FIGHTSHIFT — Menu</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FIGHTSHIFT</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="icon" href="favicon.png" />
 </head>
 <body>
-  <!-- Overlay PRESS START (bloque les clics tant qu’on n’a pas interagi) -->
   <div id="start-screen"><h1 class="press-start">PRESS START</h1></div>
 
   <div class="page">
     <header class="header">
       <div class="brand">FIGHTSHIFT</div>
+      <nav class="nav">
+      </nav>
     </header>
 
     <main class="container">
@@ -23,7 +23,7 @@
           <p>Choisis où aller :</p>
           <div class="stack">
             <button class="btn" onclick="location.href='rules.html'">Lire les règles</button>
-            <button class="btn btn-ghost" onclick="location.href='roster.html'">Roster</button>
+            <button class="btn" onclick="location.href='roster_static.html'">Voir le roster</button>
             <button class="btn" onclick="location.href='fight.html'">Lancer la démo combat</button>
           </div>
         </div>
@@ -31,34 +31,28 @@
     </main>
   </div>
 
-  <!-- Musique -->
-  <audio id="bg-music" loop>
-    <source src="techno_syndrome.mp3" type="audio/mpeg" />
-  </audio>
+  <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg" /></audio>
   <script src="shared-audio.js"></script>
-
   <script>
-    const startScreen = document.getElementById('start-screen');
-    const mainContent = document.getElementById('main-content');
-    const music = document.getElementById('bg-music');
+    const startScreen=document.getElementById('start-screen');
+    const mainContent=document.getElementById('main-content');
+    const music=document.getElementById('bg-music');
+    const hasPlayed=localStorage.getItem('musicPlaying')==='true';
+    const hasInteracted=localStorage.getItem('userInteracted')==='true';
 
-    const hasPlayedBefore = localStorage.getItem('musicPlaying') === 'true';
-    const hasInteracted = localStorage.getItem('userInteracted') === 'true';
-
-    // Si l’utilisateur a déjà interagi : pas de PRESS START, on affiche direct le menu
-    if (hasPlayedBefore && hasInteracted) {
-      startScreen.style.display = 'none';
-      mainContent.style.display = 'flex';
+    if(hasPlayed && hasInteracted){
+      startScreen.style.display='none';
+      mainContent.style.display='flex';
       window.sharedAudio.tryResume(music);
     }
 
-    // Premier clic → lance la musique + révèle le menu
-    startScreen.addEventListener('click', () => {
-      startScreen.style.display = 'none';
-      mainContent.style.display = 'flex';
+    startScreen.addEventListener('click',()=>{
+      startScreen.style.display='none';
+      mainContent.style.display='flex';
       localStorage.setItem('userInteracted','true');
       window.sharedAudio.startAndRemember(music);
     });
   </script>
 </body>
 </html>
+
