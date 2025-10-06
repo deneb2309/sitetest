@@ -31,40 +31,45 @@ body {
 
 /* === FOND grille + scanlines === */
 body::before {
-  content:''; position:absolute; inset:0; /* ✅ suit la hauteur */
-  background-image: linear-gradient(#00fff799 1px, transparent 1px),
-                    linear-gradient(to right, #00fff799 1px, transparent 1px);
+  content:''; 
+  position:absolute; 
+  inset:0; 
+  z-index:0; /* ✅ au-dessus du dégradé, sous le contenu */
+  pointer-events:none;
+  background-image: 
+    linear-gradient(#00fff799 1px, transparent 1px),
+    linear-gradient(to right, #00fff799 1px, transparent 1px);
   background-size:50px 50px;
-  z-index:-1; opacity:.08;
+  opacity:.08;
   animation:scrollGrid 10s linear infinite;
 }
-@keyframes scrollGrid{ from{background-position:0 0} to{background-position:0 100px} }
+@keyframes scrollGrid { 
+  from{ background-position:0 0; } 
+  to{ background-position:0 100px; } 
+}
 
 body::after {
-  content:''; position:absolute; inset:0;
-  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.05),
-  rgba(0,0,0,.05) 1px, transparent 1px, transparent 2px);
-  z-index:999; pointer-events:none;
+  content:''; 
+  position:absolute; 
+  inset:0;
+  z-index:2; /* ✅ scanlines au-dessus du contenu */
+  pointer-events:none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,.05),
+    rgba(0,0,0,.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
 }
 
-/* === HEADER STICKY === */
-.header {
-  position:sticky; top:0; z-index:998;
-  display:flex; align-items:center; justify-content:space-between;
-  padding: 14px 18px;
-  background: linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.3));
-  border-bottom: 2px solid var(--ring);
-  backdrop-filter: blur(4px);
-}
-.brand { font-size:16px; color:var(--pink);
-  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink); }
-.nav { display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
-
-/* === GÉNÉRAL === */
+/* === STRUCTURE GLOBALE === */
 .page {
   display:flex;
   flex-direction:column;
   min-height:100%;
+  position:relative;
+  z-index:1; /* ✅ contenu au-dessus de la grille */
 }
 
 main.container {
@@ -85,30 +90,89 @@ main.container {
   grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
 }
 
-/* === COMPOSANTS === */
-h1 { font-size:24px; color:var(--pink);
-  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink); }
-p { font-size:12px; color:#e3f7f6; }
+/* === HEADER STICKY === */
+.header {
+  position:sticky;
+  top:0; z-index:998;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  background: linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.3));
+  border-bottom: 2px solid var(--ring);
+  backdrop-filter: blur(4px);
+}
+.brand { 
+  font-size:16px; 
+  color:var(--pink);
+  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink);
+}
+.nav { 
+  display:flex; 
+  gap:12px; 
+  flex-wrap:wrap; 
+  justify-content:flex-end; 
+}
 
+/* === ÉLÉMENTS GÉNÉRAUX === */
+h1 { 
+  font-size:24px; 
+  color:var(--pink);
+  text-shadow:0 0 10px var(--pink), 0 0 20px var(--pink); 
+}
+p { 
+  font-size:12px; 
+  color:#e3f7f6; 
+}
+
+/* === BOUTONS === */
 .btn {
-  background: var(--dark); color: var(--neon);
-  border:2px solid var(--neon); padding:12px 18px; border-radius:10px;
-  text-transform:uppercase; font-size:12px; cursor:pointer;
-  box-shadow:0 0 5px var(--neon); transition: all .2s;
+  background: var(--dark); 
+  color: var(--neon);
+  border:2px solid var(--neon); 
+  padding:12px 18px; 
+  border-radius:10px;
+  text-transform:uppercase; 
+  font-size:12px; 
+  cursor:pointer;
+  box-shadow:0 0 5px var(--neon); 
+  transition: all .2s;
 }
 .btn:hover {
-  background: var(--neon); color:#000;
+  background: var(--neon); 
+  color:#000;
   box-shadow:0 0 10px var(--neon), 0 0 20px var(--neon);
   transform:scale(1.03);
 }
-.btn-ghost { border-color: var(--ring); color:#fff; }
-.btn-ghost:hover { border-color:var(--neon); }
+.btn-ghost { 
+  border-color: var(--ring); 
+  color:#fff; 
+}
+.btn-ghost:hover { 
+  border-color:var(--neon); 
+}
 
-.badge { display:inline-block; padding:6px 10px; border-radius:8px; font-size:10px; }
-.color-red{ background:linear-gradient(90deg,#ff416c,#ff4b2b); color:#fff; }
-.color-blue{ background:linear-gradient(90deg,#00c6ff,#0072ff); color:#fff; }
-.color-green{ background:linear-gradient(90deg,#00ff7a,#00c853); color:#000; }
+/* === BADGES === */
+.badge { 
+  display:inline-block; 
+  padding:6px 10px; 
+  border-radius:8px; 
+  font-size:10px; 
+}
+.color-red { 
+  background:linear-gradient(90deg,#ff416c,#ff4b2b); 
+  color:#fff; 
+}
+.color-blue { 
+  background:linear-gradient(90deg,#00c6ff,#0072ff); 
+  color:#fff; 
+}
+.color-green { 
+  background:linear-gradient(90deg,#00ff7a,#00c853); 
+  color:#000; 
+}
 
+/* === CARTES === */
 .card {
   background: rgba(0,0,0,.4);
   border:2px solid rgba(0,255,255,.12);
@@ -118,18 +182,39 @@ p { font-size:12px; color:#e3f7f6; }
   box-shadow:0 0 10px rgba(0,255,255,.06);
   transition: transform .2s, box-shadow .2s;
 }
-.card:hover { transform: translateY(-4px); box-shadow:0 0 24px rgba(0,255,255,.2); }
-.card .name { font-size:14px; margin-bottom:8px; display:flex; gap:10px; align-items:center; }
+.card:hover { 
+  transform: translateY(-4px); 
+  box-shadow:0 0 24px rgba(0,255,255,.2); 
+}
+.card .name { 
+  font-size:14px; 
+  margin-bottom:8px; 
+  display:flex; 
+  gap:10px; 
+  align-items:center; 
+}
 
 /* === ÉCRAN PRESS START === */
 #start-screen {
-  position:absolute; inset:0; background:#000;
-  display:flex; align-items:center; justify-content:center;
-  z-index:10000; cursor:pointer;
+  position:absolute; 
+  inset:0; 
+  background:#000;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  z-index:10000; 
+  cursor:pointer;
 }
-.press-start { color:var(--neon); font-size:20px;
-  text-shadow:0 0 10px var(--neon), 0 0 20px var(--neon); animation: blink 1s infinite; }
-@keyframes blink{ 0%,100%{opacity:1} 50%{opacity:0} }
+.press-start { 
+  color:var(--neon); 
+  font-size:20px;
+  text-shadow:0 0 10px var(--neon), 0 0 20px var(--neon); 
+  animation: blink 1s infinite; 
+}
+@keyframes blink { 
+  0%,100%{opacity:1} 
+  50%{opacity:0} 
+}
 
 @keyframes screenBoot {
   0%{opacity:0; transform:scale(1.2) rotateX(80deg);}
