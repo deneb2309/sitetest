@@ -1,0 +1,48 @@
+/* === POLICE RETRO ARCADE === */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* === CONFIG GÉNÉRALE === */
+html, body { margin:0; padding:0; height:100%; background:#000; display:flex; justify-content:center; align-items:center; overflow:hidden; }
+
+/* === FENÊTRE PRINCIPALE (écran arcade) === */
+body {
+  width:95vw; height:95vh;
+  background:linear-gradient(160deg,#0f0c29,#302b63,#24243e);
+  font-family:'Press Start 2P',cursive; color:#00fff7; text-align:center;
+  border-radius:40px;
+  box-shadow: 0 0 40px #000 inset, 0 0 60px rgba(255,0,204,0.2), 0 0 0 30px #1a1a1a;
+  position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20px; overflow:auto;
+  opacity:0; transform:scale(1.2); animation:screenBoot 1.2s ease-out forwards;
+}
+
+h1 { font-size:24px; color:#ff00cc; text-shadow:0 0 10px #ff00cc, 0 0 20px #ff00cc; margin-bottom:20px; text-align:center; width:100%; }
+
+nav.main-menu { display:flex; justify-content:center; flex-wrap:wrap; gap:20px; margin-top:10px; }
+
+button { background:#000; border:2px solid #00fff7; color:#00fff7; padding:12px 22px; font-size:14px; cursor:pointer; text-transform:uppercase; transition:all .25s; box-shadow:0 0 5px #00fff7; border-radius:10px; }
+button:hover { background:#00fff7; color:#000; box-shadow:0 0 10px #00fff7, 0 0 20px #00fff7; transform:scale(1.05); }
+
+.panel { background:rgba(0,0,0,.35); border:2px solid rgba(0,255,255,.15); padding:20px; border-radius:16px; max-width:900px; margin:0 auto 20px; box-shadow:0 0 10px rgba(0,255,255,.1); }
+ul.bullet { list-style:none; padding:0; }
+ul.bullet li { margin:8px 0; }
+
+.badge { display:inline-block; padding:6px 10px; border-radius:8px; font-size:11px; font-weight:700; color:#000; }
+.color-red { background:linear-gradient(90deg,#ff416c,#ff4b2b); color:#fff; }
+.color-blue { background:linear-gradient(90deg,#00c6ff,#0072ff); color:#fff; }
+.color-green { background:linear-gradient(90deg,#00ff7a,#00c853); color:#000; }
+
+/* === GRILLE 3D ANIMÉE === */
+body::before { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background-image: linear-gradient(#00fff799 1px, transparent 1px), linear-gradient(to right, #00fff799 1px, transparent 1px); background-size:50px 50px; z-index:-1; animation:scrollGrid 10s linear infinite; opacity:.28; }
+@keyframes scrollGrid { from{background-position:0 0} to{background-position:0 1000px} }
+
+/* === SCANLINES CRT === */
+body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background:repeating-linear-gradient(to bottom, rgba(0,0,0,.05), rgba(0,0,0,.05) 1px, transparent 1px, transparent 2px); z-index:999; pointer-events:none; }
+
+/* === ÉCRAN DE DÉMARRAGE (menu uniquement) === */
+#start-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center; z-index:10000; cursor:pointer; }
+.press-start { color:#00fff7; font-size:20px; text-align:center; animation:blink 1s infinite; text-shadow:0 0 10px #00fff7, 0 0 20px #00fff7; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* === ANIMATION ÉCRAN QUI S'ALLUME === */
+@keyframes screenBoot { 0%{opacity:0; transform:scale(1.2) rotateX(80deg); filter:brightness(0) blur(40px);} 70%{opacity:1; transform:scale(1.05) rotateX(10deg); filter:brightness(1.5) blur(2px);} 100%{opacity:1; transform:scale(1) rotateX(0deg); filter:brightness(1) blur(0);} }
