@@ -3,57 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <title>FIGHTSHIFT</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="home">
   <div id="start-screen"><h1 class="press-start">PRESS START</h1></div>
-
-  <div class="page">
+  <div class="page" style="display:none" id="page">
     <header class="header">
       <div class="brand">FIGHTSHIFT</div>
       <nav class="nav">
+        <button class="btn btn-ghost" onclick="location.href='rules.html'">Règles</button>
+        <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
+        <button class="btn btn-ghost" onclick="location.href='arcade.html'">Mode Arcade</button>
       </nav>
     </header>
-
     <main class="container">
-      <div id="main-content" class="stack" style="display:none">
-        <h1>Mode Arcade</h1>
-        <div class="panel" style="max-width:720px">
-          <br><p>Choisis où aller :</p>
-          <div class="stack">
-            <button class="btn" onclick="location.href='rules.html'">Lire les règles</button>
-            <button class="btn" onclick="location.href='roster_static.html'">Voir le roster</button>
-            <button class="btn" onclick="location.href='fight.html'">Lancer la démo combat</button>
-            <button class="btn btn-ghost" onclick="location.href='arcade.html'">JOUER</button>
-          </div>
+      <h1>Bienvenue</h1>
+      <div class="card" style="max-width:720px;margin:0 auto">
+        <p>Choisis où aller :</p>
+        <div class="nav" style="justify-content:center">
+          <button class="btn" onclick="location.href='rules.html'">Lire les règles</button>
+          <button class="btn" onclick="location.href='roster_static.html'">Voir le roster</button>
+          <button class="btn" onclick="location.href='arcade.html'">Lancer l'Arcade</button>
         </div>
       </div>
     </main>
   </div>
-
   <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg" /></audio>
   <script src="shared-audio.js"></script>
   <script>
-    const startScreen=document.getElementById('start-screen');
-    const mainContent=document.getElementById('main-content');
+    const start=document.getElementById('start-screen');
+    const page=document.getElementById('page');
     const music=document.getElementById('bg-music');
-    const hasPlayed=localStorage.getItem('musicPlaying')==='true';
-    const hasInteracted=localStorage.getItem('userInteracted')==='true';
-
-    if(hasPlayed && hasInteracted){
-      startScreen.style.display='none';
-      mainContent.style.display='flex';
-      window.sharedAudio.tryResume(music);
-    }
-
-    startScreen.addEventListener('click',()=>{
-      startScreen.style.display='none';
-      mainContent.style.display='flex';
-      localStorage.setItem('userInteracted','true');
+    start.addEventListener('click',()=>{
+      start.style.display='none'; page.style.display='block';
       window.sharedAudio.startAndRemember(music);
     });
   </script>
 </body>
 </html>
-

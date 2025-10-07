@@ -1,178 +1,50 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>FIGHTSHIFT — Roster (statique)</title>
+  <meta charset="UTF-8"><title>FIGHTSHIFT — Roster</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.png" />
 </head>
 <body>
-<div class="page">
-  <header class="header">
-    <div class="brand">FIGHTSHIFT</div>
-    <nav class="nav">
-      <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
-      <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
-    </nav>
-  </header>
+  <div class="page">
+    <header class="header">
+      <div class="brand">FIGHTSHIFT</div>
+      <nav class="nav">
+        <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
+        <button class="btn btn-ghost" onclick="location.href='rules.html'">Règles</button>
+        <button class="btn btn-ghost" onclick="location.href='arcade.html'">Arcade</button>
+      </nav>
+    </header>
 
-  <main class="container">
-    <h1>Roster — FIGHTSHIFT</h1>
-    <section class="grid roster">
+    <main class="container">
+      <h1>Roster</h1>
+      <div class="grid roster" id="grid"></div>
+    </main>
+  </div>
 
-      <!-- === PERSONNAGES === -->
-
-      <article class="card">
-        <div class="name"><strong>Arthur</strong> <span class="badge color-red">ROUGE</span></div>
-        <div class="meta">PV : 600</div>
-        <p>Tank offensif maniant le feu ; renvoie et contre les attaques.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Ataraxia (arme)</li>
-            <li>Raw Strength (lancer d'objet)</li>
-            <li>Scorching Hands (3 attaques au choix)</li>
-            <li>God's Judgment (ultime)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Cahara</strong> <span class="badge color-blue">BLEU</span></div>
-        <div class="meta">PV : 450</div>
-        <p>Maître de la magie du sang : soins, réanimations et contrôle de terrain.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Blood Geyser</li>
-            <li>Blood Rain (zone de flaques)</li>
-            <li>Arsenal of a God</li>
-            <li>Decem Milia Perfecta Sectio (ultime)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Lazarus</strong> <span class="badge color-green">VERT</span></div>
-        <div class="meta">PV : 600</div>
-        <p>Psychique/exécuteur : contrôle mental, exécutions et manipulation des effets.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Heaven Pierce Her (ultime)</li>
-            <li>Raw, Stained, Brutal (maîtrise mentale)</li>
-            <li>Mirror of the World (vision inversée)</li>
-            <li>If I Am With You (buff alliés)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Signus</strong> <span class="badge color-blue">BLEU</span></div>
-        <div class="meta">PV : 550</div>
-        <p>Profundi contrôlant ombres et invocations abyssales.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Heart of the Deep (ultime / zone)</li>
-            <li>Void Drifter / Void Dragon</li>
-            <li>Silver Knife / Unholy Frenzy</li>
-            <li>Call of the Abyss (invocations)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Marco</strong> <span class="badge color-green">VERT</span></div>
-        <div class="meta">PV : 500</div>
-        <p>Colosse de pierre : dégâts de zone et formes surpuissantes.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>A One Trip to Hell</li>
-            <li>Nano Rocks (forme surpuissante)</li>
-            <li>Potemmkkiinn (attaque spéciale)</li>
-            <li>Rayon Noir</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Jemal</strong> <span class="badge color-green">VERT</span></div>
-        <div class="meta">PV : 600</div>
-        <p>Manipulateur temporel par la musique : clones, buffs et ralentissements.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Echo Temporel (clone décalé)</li>
-            <li>Téma le Tank (buff/Invincibilité)</li>
-            <li>Chant de l'assaisonnement (soin)</li>
-            <li>Slow (ralentissement global)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Kagenami</strong> <span class="badge color-blue">BLEU</span></div>
-        <div class="meta">PV : 550</div>
-        <p>Assassin des ombres : backstabs, invisibilité et exécutions.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Backstab (critique dans le dos)</li>
-            <li>Arise (réanimation d'ennemis)</li>
-            <li>Invisibility (ultime)</li>
-            <li>Exécution Sommaire (ultime)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Samira</strong> <span class="badge color-red">ROUGE</span></div>
-        <div class="meta">PV : 400</div>
-        <p>Demi-démon agile : armes à feu, transformations et dégâts élevés.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Charging Slash (dash électrique)</li>
-            <li>Devil Trigger (transformation)</li>
-            <li>Buster (attaques variées selon la taille)</li>
-            <li>Enlace del Trueno (fouets électriques)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>S.A.M.</strong> <span class="badge color-green">VERT</span></div>
-        <div class="meta">PV : 850</div>
-        <p>Construct massif : gravité, provocation et résistances élevées.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Gravity Shift (zone de plaquage)</li>
-            <li>Counter (contre puissant)</li>
-            <li>Pressure (passif)</li>
-            <li>Fatal Blow (gimmick avec allié)</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="name"><strong>Burnice</strong> <span class="badge color-red">ROUGE</span></div>
-        <div class="meta">PV : 500</div>
-        <p>Pyromane maître des anomalies de feu et des flaques inflammables.</p>
-        <div class="ability-list"><em>Compétences :</em>
-          <ul>
-            <li>Surcharge Pyrique (lance-flammes)</li>
-            <li>Juste de l'essence (flaque inflammable)</li>
-            <li>Enfer Glorieux (ultime)</li>
-            <li>Anomalie d'attribut (boss only)</li>
-          </ul>
-        </div>
-      </article>
-
-    </section>
-  </main>
-</div>
-
-
-  <!-- Musique -->
-  <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg" /></audio>
+  <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg"></audio>
   <script src="shared-audio.js"></script>
   <script>
-    window.sharedAudio.tryResume(document.getElementById('bg-music'));
+  window.sharedAudio.tryResume(document.getElementById('bg-music'));
+  const COLOR = {red:'color-red', blue:'color-blue', green:'color-green'};
+  fetch('roster.json', {cache:'no-store'}).then(r=>r.json()).then(render);
+  function render(roster){
+    const grid = document.getElementById('grid');
+    grid.innerHTML = roster.map(p => `
+      <div class="card">
+        <div class="name">
+          <span>${p.name}</span>
+          <span class="badge ${COLOR[p.color]||''}">${p.color.toUpperCase()}</span>
+        </div>
+        <p>${p.short||''}</p>
+        <p><strong>PV</strong> ${p.hp_max} • <strong>VIT</strong> ${p.speed}</p>
+        <p><strong>ATK</strong> ${p.atk??'-'} / <strong>SPATK</strong> ${p.spatk??'-'} • <strong>DEF</strong> ${p.def??'-'} / <strong>SPDEF</strong> ${p.spdef??'-'}</p>
+        <p><strong>ACC</strong> ${p.acc??0}% • <strong>EVA</strong> ${p.eva??0}% • <strong>CRIT</strong> ${p.crit??6}%</p>
+        <p><strong>Resists</strong> BLD ${p.resists?.bleed??0}% / BRN ${p.resists?.burn??0}% / SLOW ${p.resists?.slow??0}%</p>
+        <p><strong>Moves</strong> — ${p.moves.join(', ')}</p>
+      </div>
+    `).join('');
+  }
   </script>
 </body>
 </html>

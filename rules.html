@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>FIGHTSHIFT — Règles</title>
+  <meta charset="UTF-8"><title>FIGHTSHIFT — Règles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,37 +12,27 @@
       <nav class="nav">
         <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
         <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
-        <button class="btn btn-ghost" onclick="location.href='fight.html'">Démo Combat</button>
+        <button class="btn btn-ghost" onclick="location.href='arcade.html'">Arcade</button>
       </nav>
     </header>
-
     <main class="container stack">
       <h1>Règles du Mode Arcade</h1>
-
-      <section class="panel">
+      <div class="card" style="max-width:860px">
         <h2>🟢🔵🔴 Système de Couleurs</h2>
-        <ul class="bullet">
-          <li><span class="badge color-green">VERT</span> > <span class="badge color-blue">BLEU</span></li>
-          <li><span class="badge color-blue">BLEU</span> > <span class="badge color-red">ROUGE</span></li>
-          <li><span class="badge color-red">ROUGE</span> > <span class="badge color-green">VERT</span></li>
-        </ul>
-      </section>
-
-      <section class="panel">
-        <h2>🛠️ Capacités</h2>
-        <p>Chaque personnage peut avoir jusqu’à 5 capacités : compétences, extensions, ultimes ou passifs.</p>
-      </section>
-
-      <section class="panel">
+        <p>VERT &gt; BLEU, BLEU &gt; ROUGE, ROUGE &gt; VERT (x1.5 dégâts). STAB (même couleur que le perso) : x1.2.</p>
+      </div>
+      <div class="card" style="max-width:860px">
+        <h2>🎯 Stats & Effets</h2>
+        <p>ATK/SPATK/DEF/SPDEF, ACC/EVA, CRIT%, Résistances (Bleed/Burn/Slow). Buffs (Power Up, Devil Trigger), Statuts (Bleed, Burn, Slow, Invisibility), Priorités &amp; Vitesse.</p>
+      </div>
+      <div class="card" style="max-width:860px">
         <h2>🎮 Progression</h2>
-        <p>4 actes, 10 niveaux chacun, avec un boss rush en fin d’acte.</p>
-      </section>
+        <p>4 actes × 10 stages (le 10 sera un boss rush).</p>
+      </div>
     </main>
   </div>
-
   <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg"></audio>
   <script src="shared-audio.js"></script>
   <script>window.sharedAudio.tryResume(document.getElementById('bg-music'));</script>
 </body>
 </html>
-

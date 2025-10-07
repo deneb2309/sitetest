@@ -7,27 +7,20 @@
 <link rel="stylesheet" href="style.css" />
 <link rel="icon" type="image/png" href="favicon.png" />
 <style>
-  /* ====== LAYOUT BATTLE D/P ====== */
   .arena-dp{max-width:980px;margin:0 auto;border:2px solid var(--ring);border-radius:16px;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.2));box-shadow:0 0 12px var(--ring2);overflow:hidden}
   .battle-top{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:16px 16px 0 16px;min-height:220px}
   .field{background:radial-gradient(ellipse at center,rgba(255,255,255,.05),rgba(0,0,0,.1));border:1px solid rgba(255,255,255,.06);border-radius:12px;position:relative;display:flex;align-items:end;justify-content:center;overflow:hidden}
   .back-plate{position:absolute;inset:auto 10% 10% 10%;height:36%;border-radius:999px;background:radial-gradient(ellipse at center,rgba(255,255,255,.06),rgba(0,0,0,.2))}
   .sprite{position:relative;z-index:2;font-size:14px;color:#fff;text-shadow:0 2px 0 #000; margin-bottom:6px}
   .shake{animation:shake .2s linear 2}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-  .fade{animation:fade .35s ease}@keyframes fade{from{opacity:.2}to{opacity:1}}
-
-  /* HUDs façon D/P */
   .hud{position:absolute;left:8px;right:8px;top:8px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
   .hud .box{pointer-events:auto;min-width:46%;padding:8px;border-radius:10px;background:rgba(0,0,0,.45);border:2px solid var(--ring)}
   .hud .name{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#fff}
-  .hud .lv{font-size:11px;opacity:.9}
   .hpbar{height:10px;background:#111;border-radius:8px;overflow:hidden;border:1px solid #0ff;margin-top:6px}
   .hpfill{height:100%;width:100%}
   .hp-red{background:linear-gradient(90deg,#ff416c,#ff4b2b)}
   .hp-blue{background:linear-gradient(90deg,#00c6ff,#0072ff)}
   .hp-green{background:linear-gradient(90deg,#00ff7a,#00c853)}
-
-  /* bas de l’écran (menu commandes) */
   .battle-bottom{background:rgba(0,0,0,.55);border-top:2px solid var(--ring);padding:10px;display:grid;grid-template-columns:2fr 3fr;gap:10px}
   .textbox{min-height:100px;background:rgba(0,0,0,.35);border:2px solid var(--ring);border-radius:10px;padding:10px;text-align:left;overflow:auto}
   .cmd{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -37,17 +30,7 @@
   .mv .pp{font-size:11px;opacity:.9}
   .mv .type{font-size:11px}
   .t-red{border-color:#ff4b2b} .t-blue{border-color:#0072ff} .t-green{border-color:#00c853}
-  .mv:hover{box-shadow:0 0 10px var(--neon);transform:translateY(-1px)}
   .mini{font-size:11px;opacity:.85}
-
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .badge-circle{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid var(--ring);background:rgba(0,0,0,.3);font-size:11px}
-  .priority{font-size:10px;padding:2px 6px;border-radius:6px;border:1px solid var(--ring)}
-  .prio-plus{color:#0f0;background:rgba(0,255,0,.15)}
-  .status{font-size:11px;margin-left:6px;padding:2px 6px;border-radius:6px;border:1px solid var(--ring)}
-  .st-burn{background:rgba(255,64,64,.2)} .st-bleed{background:rgba(255,0,0,.2)} .st-invis{background:rgba(255,255,255,.15)}
-  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-  .btnbar .btn{padding:8px 12px}
 </style>
 </head>
 <body>
@@ -65,28 +48,25 @@
       <h1>Mode Arcade — Combat</h1>
 
       <div class="arena-dp">
-        <!-- TOP: champs de bataille -->
         <div class="battle-top">
-          <!-- Ennemi -->
           <div class="field" id="fieldE">
             <div class="hud">
               <div class="box">
                 <div class="name"><span id="eName">—</span><span class="lv" id="eLv">ACT 1-1</span></div>
                 <div class="hpbar"><div class="hpfill" id="eHP"></div></div>
-                <div class="row mini" id="eMeta"></div>
+                <div class="mini" id="eMeta"></div>
               </div>
             </div>
             <div class="back-plate"></div>
             <div class="sprite" id="eSprite">[ Ennemi ]</div>
           </div>
 
-          <!-- Joueur -->
           <div class="field" id="fieldP">
             <div class="hud">
               <div class="box">
                 <div class="name"><span id="pName">—</span><span class="lv" id="pLv">ACT 1-1</span></div>
                 <div class="hpbar"><div class="hpfill" id="pHP"></div></div>
-                <div class="row mini" id="pMeta"></div>
+                <div class="mini" id="pMeta"></div>
               </div>
             </div>
             <div class="back-plate"></div>
@@ -94,433 +74,112 @@
           </div>
         </div>
 
-        <!-- BOTTOM: texte + commandes -->
-        <div class="battle-bottom">
-          <div class="textbox" id="log"></div>
+        <div class="battle-bottom" style="display:grid;grid-template-columns:2fr 3fr;gap:10px;background:rgba(0,0,0,.55);border-top:2px solid var(--ring);padding:10px">
+          <div class="textbox" id="log" style="min-height:100px;background:rgba(0,0,0,.35);border:2px solid var(--ring);border-radius:10px;padding:10px;text-align:left;overflow:auto"></div>
 
           <div>
-            <div class="topbar">
-              <div class="row">
-                <label class="badge-circle">Acte
-                  <select id="actSel">
-                    <option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4">IV</option>
-                  </select>
-                </label>
-                <label class="badge-circle">Stage
-                  <select id="stageSel">
-                    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-                    <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-                  </select>
-                </label>
-                <label class="badge-circle">Perso
-                  <select id="playerSel"></select>
-                </label>
-              </div>
-              <div class="btnbar">
-                <button class="btn" id="startBtn">🎮 Lancer</button>
-                <button class="btn btn-ghost" id="resetBtn">↺ Reset</button>
-              </div>
+            <div class="mini" style="margin-bottom:8px">
+              <label>Acte <select id="actSel"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+              <label>Stage <select id="stageSel"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+              <label>Perso <select id="playerSel"></select></label>
+              <button class="btn" id="startBtn">🎮 Lancer</button>
+              <button class="btn btn-ghost" id="resetBtn">↺ Reset</button>
             </div>
 
-            <!-- Grille de mouvements -->
             <div class="cmd">
               <button class="mv" id="mv1"><div class="head"><span class="label">—</span><span class="pp">PP —</span></div><div class="type">—</div></button>
               <button class="mv" id="mv2"><div class="head"><span class="label">—</span><span class="pp">PP —</span></div><div class="type">—</div></button>
               <button class="mv" id="mv3"><div class="head"><span class="label">—</span><span class="pp">PP —</span></div><div class="type">—</div></button>
               <button class="mv" id="mv4"><div class="head"><span class="label">—</span><span class="pp">PP —</span></div><div class="type">—</div></button>
             </div>
-            <div class="row mini" style="margin-top:6px">
-              <span class="priority prio-plus">Priorité +1 : agit avant si vitesses proches</span>
-              <span class="mini">Précision, critiques, avantages de couleur actifs (1.5×)</span>
-            </div>
+            <div class="mini" style="margin-top:6px">Précision/crit/avantages actifs. Prio +1 agit avant.</div>
           </div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Musique -->
   <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg" /></audio>
   <script src="shared-audio.js"></script>
 
 <script>
-/* ================== DATA & CONSTANTES ================== */
 window.sharedAudio.tryResume(document.getElementById('bg-music'));
-
 const ADV = { red:'green', green:'blue', blue:'red' };
 const COLORNAME = c => c==='red'?'ROUGE':(c==='blue'?'BLEU':'VERT');
 const HPCLASS = c => c==='red'?'hp-red':(c==='blue'?'hp-blue':'hp-green');
-
-const FALLBACK_ROSTER = [
-  {"id":"arthur","name":"Arthur","color":"red","hp_max":600,"speed":220,"short":"Tank offensif, renvoi/contre.","moves":["Color Blast","Guard","Heavy Blow","Power Up"]},
-  {"id":"cahara","name":"Cahara","color":"blue","hp_max":450,"speed":210,"short":"Sang : terrain/saignements/soins.","moves":["Bleed","Heal","Color Blast","Focus"]},
-  {"id":"lazarus","name":"Lazarus","color":"green","hp_max":600,"speed":230,"short":"Contrôle/exécutions.","moves":["Mind Pierce","Color Blast","Guard","Focus"]},
-  {"id":"signus","name":"Signus","color":"blue","hp_max":550,"speed":240,"short":"Ombres/invocations.","moves":["Shadow Strike","Bleed","Color Blast","Guard"]},
-  {"id":"marco","name":"Marco","color":"green","hp_max":500,"speed":200,"short":"Colosse, AoE, formes.","moves":["Heavy Blow","Guard","Color Blast","Power Up"]},
-  {"id":"jemal","name":"Jemal","color":"green","hp_max":600,"speed":250,"short":"Musique/temps : slow & clones.","moves":["Quick Slash","Slow Time","Color Blast","Guard"]},
-  {"id":"kagenami","name":"Kagenami","color":"blue","hp_max":550,"speed":290,"short":"Assassin : backstab/invis.","moves":["Backstab","Invisibility","Quick Slash","Color Blast"]},
-  {"id":"samira","name":"Samira","color":"red","hp_max":400,"speed":320,"short":"Demi-démon : burst.","moves":["Charging Slash","Devil Trigger","Quick Slash","Color Blast"]},
-  {"id":"sam","name":"S.A.M.","color":"green","hp_max":850,"speed":180,"short":"Construct tank.","moves":["Gravity Shift","Guard","Heavy Blow","Color Blast"]},
-  {"id":"burnice","name":"Burnice","color":"red","hp_max":500,"speed":260,"short":"Pyromane.","moves":["Burn","Color Blast","Power Up","Quick Slash"]}
-];
-
-/* Mouvements inspirés D/P : power, accuracy, type(couleur), priority, kind, pp, cooldown, effects */
+const DEFAULT_MOVE = { power:70, acc:95, type:"color", prio:0, kind:"phys", pp:15, cd:0, text:"Attaque personnalisée (valeurs par défaut)." };
 const MOVES = {
-  "Quick Slash":   {power:55, acc:100, type:"neutral", prio:1, kind:"phys",    pp:25, cd:0,  text:"Coup rapide."},
-  "Heavy Blow":    {power:95, acc:80,  type:"neutral", prio:0, kind:"phys",    pp:10, cd:1,  text:"Puissant mais imprécis."},
-  "Color Blast":   {power:70, acc:95,  type:"color",   prio:0, kind:"spec",    pp:15, cd:0,  text:"Attaque de couleur (avantage x1.5)."},
-  "Guard":         {power:0,  acc:0,   type:"neutral", prio:2, kind:"status",  pp:20, cd:1,  text:"+DEF ce tour & réduit dégâts de 30%."},
-  "Power Up":      {power:0,  acc:0,   type:"neutral", prio:0, kind:"status",  pp:10, cd:2,  text:"+30% ATK pour 3 tours."},
-  "Heal":          {power:0,  acc:0,   type:"neutral", prio:0, kind:"status",  pp:6,  cd:2,  text:"Rend 30% PV."},
-  "Bleed":         {power:40, acc:90,  type:"neutral", prio:0, kind:"phys",    pp:15, cd:1,  text:"Applique saignement (5 tours, 6% PV/tour).", apply:"bleed"},
-  "Burn":          {power:60, acc:85,  type:"red",     prio:0, kind:"spec",    pp:10, cd:1,  text:"Peut brûler (ATK-20% pendant 3 tours).", apply:"burn"},
-  "Backstab":      {power:75, acc:95,  type:"blue",    prio:0, kind:"phys",    pp:10, cd:1,  text:"Critique x2 si avantage de couleur.", critBonus:true},
-  "Invisibility":  {power:0,  acc:0,   type:"blue",    prio:2, kind:"status",  pp:6,  cd:3,  text:"Esquive +40% pendant 2 tours.", apply:"invis"},
-  "Charging Slash":{power:80, acc:90,  type:"red",     prio:0, kind:"phys",    pp:10, cd:1,  text:"Charge tranchante."},
-  "Devil Trigger": {power:0,  acc:0,   type:"red",     prio:0, kind:"status",  pp:3,  cd:4,  text:"+40% ATK & +20% SPD (3 tours).", apply:"devil"},
-  "Gravity Shift": {power:0,  acc:0,   type:"green",   prio:1, kind:"status",  pp:8,  cd:2,  text:"-20% ATK ennemi, +20% DEF (3 tours).", apply:"grav"},
-  "Mind Pierce":   {power:85, acc:90,  type:"green",   prio:0, kind:"spec",    pp:10, cd:1,  text:"Perce l’esprit."},
-  "Slow Time":     {power:0,  acc:0,   type:"green",   prio:1, kind:"status",  pp:8,  cd:2,  text:"-20% SPD ennemi (3 tours).", apply:"slow"},
-  "Shadow Strike": {power:70, acc:95,  type:"blue",    prio:0, kind:"phys",    pp:15, cd:0,  text:"Attaque de l’ombre."},
-  "Focus":         {power:0,  acc:0,   type:"neutral", prio:1, kind:"status",  pp:8,  cd:2,  text:"+10% accuracy & +10% crit (3 tours)."}
+  "Quick Slash":{power:55,acc:100,type:"neutral",prio:1,kind:"phys",pp:25,cd:0,text:"Coup rapide."},
+  "Heavy Blow":{power:95,acc:80,type:"neutral",prio:0,kind:"phys",pp:10,cd:1,text:"Puissant mais imprécis."},
+  "Color Blast":{power:70,acc:95,type:"color",prio:0,kind:"spec",pp:15,cd:0,text:"Attaque de couleur."},
+  "Guard":{power:0,acc:0,type:"neutral",prio:2,kind:"status",pp:20,cd:1,text:"Bouclier (-30% ce tour)."},
+  "Power Up":{power:0,acc:0,type:"neutral",prio:0,kind:"status",pp:10,cd:2,text:"+30% ATK (3t)"},
+  "Heal":{power:0,acc:0,type:"neutral",prio:0,kind:"status",pp:6,cd:2,text:"Soin 30% PV"},
+  "Bleed":{power:40,acc:90,type:"neutral",prio:0,kind:"phys",pp:15,cd:1,text:"Saignement 5t (6%).",apply:"bleed",proc:100},
+  "Burn":{power:60,acc:85,type:"red",prio:0,kind:"spec",pp:10,cd:1,text:"Brûlure possible.",apply:"burn",proc:80},
+  "Backstab":{power:75,acc:95,type:"blue",prio:0,kind:"phys",pp:10,cd:1,text:"Crit x2 si avantage.",critBonus:true},
+  "Invisibility":{power:0,acc:0,type:"blue",prio:2,kind:"status",pp:6,cd:3,text:"Esquive +40% (2t).",apply:"invis"},
+  "Charging Slash":{power:80,acc:90,type:"red",prio:0,kind:"phys",pp:10,cd:1,text:"Charge tranchante."},
+  "Devil Trigger":{power:0,acc:0,type:"red",prio:0,kind:"status",pp:3,cd:4,text:"+40% ATK +20% SPD (3t).",apply:"devil"},
+  "Gravity Shift":{power:0,acc:0,type:"green",prio:1,kind:"status",pp:8,cd:2,text:"-20% ATK ennemi, +20% DEF (3t).",apply:"grav"},
+  "Mind Pierce":{power:85,acc:90,type:"green",prio:0,kind:"spec",pp:10,cd:1,text:"Perce l’esprit."},
+  "Slow Time":{power:0,acc:0,type:"green",prio:1,kind:"status",pp:8,cd:2,text:"-20% SPD (3t).",apply:"slow",proc:100},
+  "Shadow Strike":{power:70,acc:95,type:"blue",prio:0,kind:"phys",pp:15,cd:0,text:"Attaque de l’ombre."},
+  "Focus":{power:0,acc:0,type:"neutral",prio:1,kind:"status",pp:8,cd:2,text:"+10% acc +10% crit (3t)."}
 };
-
-/* ================== ÉTAT & UI REFS ================== */
-const el = id => document.getElementById(id);
-const log = el('log');
-
-const actSel = el('actSel'), stageSel = el('stageSel'), playerSel = el('playerSel');
-const startBtn = el('startBtn'), resetBtn = el('resetBtn');
-
-const eName = el('eName'), eLv = el('eLv'), eHP = el('eHP'), eMeta = el('eMeta'), eSprite = el('eSprite');
-const pName = el('pName'), pLv = el('pLv'), pHP = el('pHP'), pMeta = el('pMeta'), pSprite = el('pSprite');
-
-const mButtons = [el('mv1'),el('mv2'),el('mv3'),el('mv4')];
-
-let ROSTER = [];
-let P = null, E = null;    // combattants
-let turn = 1, act=1, stage=1;
-const SAVEKEY = 'FIGHTSHIFT_ARCADE_V2';
-
-/* ================== UTILITAIRES ================== */
-function rnd(a,b){return Math.random()*(b-a)+a}
-function chance(p){return Math.random()*100 < p}
+function ensureMove(n){ if(!n) return null; if(!MOVES[n]) MOVES[n] = {...DEFAULT_MOVE}; return MOVES[n]; }
+const el=id=>document.getElementById(id), log=el('log');
+const actSel=el('actSel'), stageSel=el('stageSel'), playerSel=el('playerSel');
+const startBtn=el('startBtn'), resetBtn=el('resetBtn');
+const eName=el('eName'), eLv=el('eLv'), eHP=el('eHP'), eMeta=el('eMeta'), eSprite=el('eSprite');
+const pName=el('pName'), pLv=el('pLv'), pHP=el('pHP'), pMeta=el('pMeta'), pSprite=el('pSprite');
+const mButtons=[el('mv1'),el('mv2'),el('mv3'),el('mv4')];
+let ROSTER=[], P=null,E=null, act=1,stage=1; const SAVEKEY='FIGHTSHIFT_ARCADE_V3';
+function rnd(a,b){return Math.random()*(b-a)+a} function chance(p){return Math.random()*100<p}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function typeMult(attType, attColor, defColor){
-  const t = (attType==='color')? attColor : (attType==='red'||attType==='blue'||attType==='green'? attType : null);
-  if(!t) return 1.0;
-  return ADV[t]===defColor ? 1.5 : 1.0;
+function typeMult(attType, attColor, defColor){ const t=(attType==='color')?attColor:(['red','blue','green'].includes(attType)?attType:null); if(!t) return 1.0; return ( {red:'green',green:'blue',blue:'red'}[t]===defColor )?1.5:1.0; }
+function accRoll(base, A, D){ if(base<=0) return true; let acc=base; acc+=A.accBase*0.5; acc-=D.evaBase*0.5; if(A.buffs?.focus>0) acc+=10; if(D.states?.invis>0) acc-=40; return chance(clamp(acc,1,100)); }
+function critRoll(A, m, adv){ let c=A.critBase; if(A.buffs?.focus>0) c+=10; if(m.critBonus && adv>1) c+=20; return chance(clamp(c,0,100))?(m.kind==='phys'?1.8:1.6):1.0; }
+function makeFighter(b){ const d=(v,x)=>(v==null?x:v), r=b.resists||{}; return {
+  id:b.id,name:b.name,color:b.color,short:b.short||'',hpMax:d(b.hp_max,600),hp:d(b.hp_max,600),
+  speedBase:d(b.speed,240),speedMod:1,atkBase:d(b.atk,70),spatkBase:d(b.spatk,70),
+  defBase:d(b.def,70),spdefBase:d(b.spdef,70),accBase:d(b.acc,0),evaBase:d(b.eva,0),critBase:d(b.crit,6),
+  resists:{bleed:d(r.bleed,0),burn:d(r.burn,0),slow:d(r.slow,0)},
+  atkMod:1,defMod:1,spAtkMod:1,spDefMod:1,accMod:1,evaMod:1,
+  buffs:{power:0,focus:0,devil:0,grav:0}, states:{bleed:0,burn:0,invis:0,slow:0},
+  moves:(b.moves||[]).slice(0,4).map(n=>{ensureMove(n);return {name:n,pp:(MOVES[n]?.pp??15),cd:0};})
+};}
+function applyStartOfTurn(f){ for(const k in f.buffs){if(f.buffs[k]>0)f.buffs[k]--} for(const k in f.states){if(f.states[k]>0)f.states[k]--}
+  f.atkMod=f.defMod=f.spAtkMod=f.spDefMod=f.speedMod=f.accMod=f.evaMod=1;
+  if(f.buffs.power>0){f.atkMod*=1.3;f.spAtkMod*=1.3} if(f.buffs.devil>0){f.atkMod*=1.4;f.spAtkMod*=1.4;f.speedMod*=1.2}
+  if(f.buffs.grav>0){f.defMod*=1.2;f.spDefMod*=1.2} if(f.states.burn>0){f.atkMod*=0.8} if(f.states.slow>0){f.speedMod*=0.8}
+  if(f.buffs.focus>0){f.accMod*=1.1;f.critBonus=10}else f.critBonus=0;
+  if(f.states.bleed>0){ const dot=Math.max(1,Math.floor(f.hpMax*0.06)); f.hp=clamp(f.hp-dot,0,f.hpMax); pushLog(`${f.name} saigne (${dot}).`); }
 }
-function accRoll(baseAcc, attacker, defender){
-  // invis augmente l’esquive, focus augmente précision
-  let acc = baseAcc;
-  if(attacker.buffs.focus>0) acc += 10;
-  if(defender.states.invis>0) acc -= 40;
-  return chance(acc<=0?100:acc);
-}
-function critRoll(attacker, move, advantage){
-  let crit = 6; // 6% base
-  if(attacker.buffs.focus>0) crit += 10;
-  if(move.critBonus && advantage>1) crit += 20;
-  return chance(crit)? (move.kind==='phys'?1.8:1.6) : 1.0;
-}
-
-/* ================== COMBATTANTS ================== */
-function makeFighter(b){
-  return {
-    id:b.id, name:b.name, color:b.color, short:b.short||'',
-    hpMax:b.hp_max, hp:b.hp_max,
-    speedBase:b.speed||240, speedMod:1.0,
-    atkMod:1.0, defMod:1.0, accMod:1.0,
-    buffs:{ power:0, focus:0, devil:0, grav:0 },  // durée tours restants
-    states:{ bleed:0, burn:0, invis:0, slow:0 },
-    moves:(b.moves||[]).slice(0,4).map(n=>({name:n, pp:MOVES[n]?.pp??15, cd:0}))
-  };
-}
-function applyStartOfTurn(f){
-  // diminuer durées
-  for(const k in f.buffs){ if(f.buffs[k]>0) f.buffs[k]--; }
-  for(const k in f.states){ if(f.states[k]>0) f.states[k]--; }
-  // recalcul mods
-  f.atkMod = 1.0; f.defMod = 1.0; f.speedMod = 1.0; f.accMod = 1.0;
-  if(f.buffs.power>0) f.atkMod *= 1.3;
-  if(f.buffs.devil>0){ f.atkMod *= 1.4; f.speedMod *= 1.2; }
-  if(f.buffs.grav>0) f.defMod *= 1.2;
-  if(f.states.burn>0) f.atkMod *= 0.8;
-  if(f.states.slow>0) f.speedMod *= 0.8;
-  // DOT
-  if(f.states.bleed>0){
-    const dot = Math.max(1, Math.floor(f.hpMax*0.06));
-    f.hp = clamp(f.hp - dot, 0, f.hpMax);
-    pushLog(`${f.name} saigne (${dot}).`);
-    shake(f===P?'fieldP':'fieldE');
-  }
-}
-function moveReady(m){ return m.pp>0 && m.cd===0; }
-function beginCooldowns(f){ f.moves.forEach(m=>{ if(m.cd>0) m.cd--; }); }
-
-/* ================== UI HELPERS ================== */
-function setHPBars(){
-  pHP.className = 'hpfill ' + HPCLASS(P.color);
-  eHP.className = 'hpfill ' + HPCLASS(E.color);
-  pHP.style.width = Math.round(100*P.hp/P.hpMax)+'%';
-  eHP.style.width = Math.round(100*E.hp/E.hpMax)+'%';
-}
-function setNames(){
-  pName.textContent = `${P.name} [${COLORNAME(P.color)}]`;
-  eName.textContent = `${E.name} [${COLORNAME(E.color)}]`;
-  pLv.textContent = `ACT ${act}-${stage}`;
-  eLv.textContent = `ACT ${act}-${stage}`;
-  pSprite.textContent = `[ ${P.name} ]`; eSprite.textContent = `[ ${E.name} ]`;
-  updateMeta();
-}
-function statusBadges(f){
-  const arr=[];
-  if(f.states.bleed>0) arr.push(`<span class="status st-bleed">Saignement ${f.states.bleed}</span>`);
-  if(f.states.burn>0)  arr.push(`<span class="status st-burn">Brûlure ${f.states.burn}</span>`);
-  if(f.states.invis>0) arr.push(`<span class="status st-invis">Invis. ${f.states.invis}</span>`);
-  if(f.buffs.devil>0)  arr.push(`<span class="status">Devil ${f.buffs.devil}</span>`);
-  if(f.buffs.power>0)  arr.push(`<span class="status">Puissance ${f.buffs.power}</span>`);
-  if(f.buffs.grav>0)   arr.push(`<span class="status">Gravité ${f.buffs.grav}</span>`);
-  if(f.buffs.focus>0)  arr.push(`<span class="status">Focus ${f.buffs.focus}</span>`);
-  if(f.states.slow>0)  arr.push(`<span class="status">Ralent. ${f.states.slow}</span>`);
-  return arr.join(' ');
-}
-function updateMeta(){
-  pMeta.innerHTML = statusBadges(P);
-  eMeta.innerHTML = statusBadges(E);
-}
-function pushLog(t){ log.innerHTML += `<p>${t}</p>`; log.scrollTop = log.scrollHeight; }
-function shake(id){ const f=el(id); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); }
-
-/* ================== ROSTER / ENNEMI ================== */
-async function loadRoster(){
-  try{
-    const res = await fetch('roster.json',{cache:'no-store'});
-    if(!res.ok) throw new Error();
-    ROSTER = await res.json();
-    // si pas de moves/speed dans JSON externe, on fusionne à partir du fallback
-    ROSTER = ROSTER.map(ch=>{
-      const fb = FALLBACK_ROSTER.find(x=>x.id===ch.id) || {};
-      return {
-        ...ch,
-        speed: ch.speed ?? fb.speed ?? 240,
-        moves: ch.moves ?? fb.moves ?? ["Quick Slash","Color Blast","Guard","Power Up"]
-      };
-    });
-  }catch(_){ ROSTER = FALLBACK_ROSTER; }
-  playerSel.innerHTML = ROSTER.map((c,i)=>`<option value="${i}">${c.name} — ${COLORNAME(c.color)}</option>`).join('');
-}
-function genEnemy(){
-  const base = ROSTER[Math.floor(Math.random()*ROSTER.length)];
-  const bonus = Math.floor((act-1)*40 + (stage-1)*10);
-  const clone = JSON.parse(JSON.stringify(base));
-  clone.hp_max += bonus;
-  clone.speed = (clone.speed||240) + Math.floor((act-1)*5);
-  return clone;
-}
-
-/* ================== BATAILLE ================== */
-function setupBattle(){
-  const pBase = ROSTER[playerSel.value];
-  P = makeFighter(pBase);
-  E = makeFighter(genEnemy());
-  setNames();
-  setHPBars();
-  renderMoves();
-  log.innerHTML = `<p>Un ${E.name} apparaît !</p>`;
-}
-function renderMoves(){
-  const list = P.moves;
-  for(let i=0;i<4;i++){
-    const btn = mButtons[i];
-    const m  = list[i];
-    if(!m){ btn.dataset.disabled="1"; btn.querySelector('.label').textContent='—'; btn.querySelector('.pp').textContent='PP —'; btn.querySelector('.type').textContent='—'; btn.classList.remove('t-red','t-blue','t-green'); continue; }
-    const def = MOVES[m.name];
-    btn.dataset.disabled = moveReady(m)? "0" : "1";
-    btn.querySelector('.label').textContent = m.name;
-    btn.querySelector('.pp').textContent = `PP ${m.pp}${def.cd?` • CD ${m.cd}`:''}`;
-    const typ = def.type==='color'? P.color : (['red','blue','green'].includes(def.type)?def.type:'neutral');
-    btn.querySelector('.type').textContent = `${def.text} ${def.prio?`• Prio +${def.prio}`:''}`;
-    btn.classList.remove('t-red','t-blue','t-green');
-    if(typ==='red') btn.classList.add('t-red'); else if(typ==='blue') btn.classList.add('t-blue'); else if(typ==='green') btn.classList.add('t-green');
-    btn.onclick = ()=> chooseMove(i);
-  }
-}
-function chooseMove(idx){
-  const m = P.moves[idx]; if(!m) return;
-  if(!moveReady(m)) return;
-  playerAction(m);
-}
-
-function startTurn(){
-  turn++;
-  beginCooldowns(P); beginCooldowns(E);
-  applyStartOfTurn(P); applyStartOfTurn(E);
-  updateMeta(); setHPBars();
-}
-function endCheck(){
-  if(E.hp<=0){ pushLog(`<strong>${E.name} est K.O. — Victoire !</strong>`); stageAdvance(); return true; }
-  if(P.hp<=0){ pushLog(`<strong>${P.name} est K.O. — Défaite…</strong>`); return true; }
-  return false;
-}
-
-function stageAdvance(){
-  if(stage<10){ stageSel.value = String(++stage); }
-  else { stageSel.value='1'; if(act<4) actSel.value=String(++act); }
-  act = parseInt(actSel.value,10); stage = parseInt(stageSel.value,10);
-  saveProgress();
-}
-
-function damageCalc(att, def, move){
-  const defm = MOVES[move.name];
-  const base = defm.power;
-  // STAB (type = couleur de l’attaquant)
-  const stab = (defm.type==='color' || defm.type===att.color) ? 1.2 : 1.0;
-  const adv  = typeMult(defm.type, (defm.type==='color'?att.color:defm.type), def.color);
-  const crit = critRoll(att, defm, adv);
-  const atk  = att.atkMod;
-  const dfn  = def.defMod;
-  const rand = rnd(0.85,1.0);
-  const dmg  = Math.floor(base * stab * adv * crit * (atk/dfn) * rand);
-  return {dmg:Math.max(1,dmg), adv, crit};
-}
-
-function applyMove(att, def, moveObj, who){
-  const mdef = MOVES[moveObj.name];
-  // précision / esquive
-  if(mdef.acc>0 && !accRoll(mdef.acc, att, def)){
-    pushLog(`${att.name} rate son ${moveObj.name} !`);
-    return;
-  }
-  if(mdef.kind==='status'){
-    // effets
-    switch(mdef.apply){
-      case 'burn':   def.states.burn = Math.max(def.states.burn, 3); pushLog(`${def.name} est brûlé !`); break;
-      case 'bleed':  def.states.bleed = Math.max(def.states.bleed, 5); pushLog(`${def.name} saigne !`); break;
-      case 'invis':  att.states.invis = Math.max(att.states.invis, 2); pushLog(`${att.name} devient quasi invisible !`); break;
-      case 'devil':  att.buffs.devil = Math.max(att.buffs.devil, 3); pushLog(`${att.name} active Devil Trigger !`); break;
-      case 'grav':   def.buffs.grav = Math.max(def.buffs.grav, 3); pushLog(`${def.name} est sous gravité accrue !`); break;
-      case 'slow':   def.states.slow = Math.max(def.states.slow, 3); pushLog(`${def.name} est ralenti !`); break;
-      default:
-        if(moveObj.name==='Guard'){ pushLog(`${att.name} se protège ! Dégâts subis -30% ce tour.`); att.guardThisTurn = true; }
-        if(moveObj.name==='Power Up'){ att.buffs.power = Math.max(att.buffs.power,3); pushLog(`${att.name} se renforce !`); }
-        if(moveObj.name==='Heal'){ const h = Math.floor(att.hpMax*0.3); att.hp = clamp(att.hp + h, 0, att.hpMax); pushLog(`${att.name} récupère ${h} PV.`); }
-    }
-  }else{
-    // dégâts
-    const {dmg, adv, crit} = damageCalc(att, def, moveObj);
-    let real = dmg;
-    if(def.guardThisTurn) real = Math.floor(real*0.7);
-    def.hp = clamp(def.hp - real, 0, def.hpMax);
-    shake(who==='P'?'fieldE':'fieldP');
-    pushLog(`${att.name} utilise ${moveObj.name} — ${real} dégâts${adv>1?' (AVANTAGE)':''}${crit>1?' (CRITIQUE)':''}.`);
-  }
-}
-
-function doTurn(pMove){
-  // IA choisit un move
-  const eIdx = chooseEnemyMove();
-  const eMove = E.moves[eIdx];
-
-  // priorité + vitesse
-  const pm = MOVES[pMove.name], em = MOVES[eMove.name];
-  const pSpeed = P.speedBase*P.speedMod + (pm.prio||0)*100;
-  const eSpeed = E.speedBase*E.speedMod + (em.prio||0)*100;
-
-  // appliquer tours
-  startTurn();
-
-  // réinitialiser guard flag
-  P.guardThisTurn=false; E.guardThisTurn=false;
-
-  const first = (pSpeed===eSpeed) ? (Math.random()<0.5?'P':'E') : (pSpeed>eSpeed?'P':'E');
-
-  const order = first==='P' ? [['P',pMove],['E',eMove]] : [['E',eMove],['P',pMove]];
-
-  for(const [who, mv] of order){
-    if(endCheck()) break;
-    // consommer PP & mettre CD
-    const owner = (who==='P')?P:E;
-    const inv = owner.moves.find(x=>x.name===mv.name);
-    if(inv){ inv.pp=Math.max(0,inv.pp-1); inv.cd = Math.max(inv.cd, MOVES[mv.name].cd||0); }
-
-    applyMove(who==='P'?P:E, who==='P'?E:P, mv, who);
-    setHPBars();
-    updateMeta();
-    if(endCheck()) break;
-  }
-
-  // rafraîchir affichage PP/CD
-  renderMoves();
-  // fin de tour
-}
-
-function chooseEnemyMove(){
-  // Priorités IA : move prêt, lethal, avantage couleur, statut utile, sinon move avec power
-  const ready = E.moves.map((m,i)=>({m,i,def:MOVES[m.name]})).filter(x=>moveReady(x.m));
-  if(!ready.length){ // sinon passe
-    return 0;
-  }
-  // lethal check
-  for(const x of ready){
-    if((x.def.power||0)>0){
-      const sim = damageCalc(E,P,x.m).dmg;
-      if(sim>=P.hp) return x.i;
-    }
-  }
-  // avantage de couleur
-  const withAdv = ready.filter(x=>{
-    const t = x.def.type==='color'?E.color: (['red','blue','green'].includes(x.def.type)?x.def.type:null);
-    return t && ADV[t]===P.color;
-  });
-  if(withAdv.length) return withAdv[Math.floor(Math.random()*withAdv.length)].i;
-
-  // status si utile
-  const statuses = ready.filter(x=>['status'].includes(x.def.kind));
-  if(statuses.length && Math.random()<0.5) return statuses[Math.floor(Math.random()*statuses.length)].i;
-
-  // otherwise highest power
-  ready.sort((a,b)=>(b.def.power||0)-(a.def.power||0));
-  return ready[0].i;
-}
-
-/* ================== SAUVEGARDE ================== */
+function beginCooldowns(f){ f.moves.forEach(m=>{if(m.cd>0)m.cd--}) } function moveReady(m){return m.pp>0&&m.cd===0}
+function setHPBars(){ pHP.className='hpfill '+HPCLASS(P.color); eHP.className='hpfill '+HPCLASS(E.color); pHP.style.width=Math.round(100*P.hp/P.hpMax)+'%'; eHP.style.width=Math.round(100*E.hp/E.hpMax)+'%'; }
+function setNames(){ pName.textContent=`${P.name} [${COLORNAME(P.color)}]`; eName.textContent=`${E.name} [${COLORNAME(E.color)}]`; pLv.textContent=`ACT ${act}-${stage}`; eLv.textContent=`ACT ${act}-${stage}`; pSprite.textContent='[ '+P.name+' ]'; eSprite.textContent='[ '+E.name+' ]'; updateMeta(); }
+function statusBadges(f){ const a=[]; if(f.states.bleed>0)a.push(`<span>BLD ${f.states.bleed}</span>`); if(f.states.burn>0)a.push(`<span>BRN ${f.states.burn}</span>`); if(f.states.invis>0)a.push(`<span>INV ${f.states.invis}</span>`); if(f.buffs.devil>0)a.push(`<span>DEV ${f.buffs.devil}</span>`); if(f.buffs.power>0)a.push(`<span>POW ${f.buffs.power}</span>`); if(f.buffs.grav>0)a.push(`<span>GRV ${f.buffs.grav}</span>`); if(f.buffs.focus>0)a.push(`<span>FOC ${f.buffs.focus}</span>`); if(f.states.slow>0)a.push(`<span>SLW ${f.states.slow}</span>`); return a.join(' ') }
+function updateMeta(){ pMeta.innerHTML=statusBadges(P); eMeta.innerHTML=statusBadges(E); }
+function pushLog(t){ log.innerHTML+=`<p>${t}</p>`; log.scrollTop=log.scrollHeight; }
+async function loadRoster(){ try{ const r=await fetch('roster.json',{cache:'no-store'}); if(!r.ok) throw 0; ROSTER=await r.json(); }catch(e){ ROSTER=[]; } if(!ROSTER.length) alert('roster.json introuvable'); playerSel.innerHTML=ROSTER.map((c,i)=>`<option value="${i}">${c.name}</option>`).join(''); }
+function genEnemy(){ const b=ROSTER[Math.floor(Math.random()*ROSTER.length)]; const bonus=Math.floor((act-1)*40+(stage-1)*10); const c=JSON.parse(JSON.stringify(b)); c.hp_max+=bonus; c.speed=(c.speed||240)+Math.floor((act-1)*5); return c; }
+function setupBattle(){ const pBase=ROSTER[playerSel.value]; P=makeFighter(pBase); E=makeFighter(genEnemy()); setNames(); setHPBars(); renderMoves(); log.innerHTML=`<p>Un ${E.name} apparaît !</p>`; }
+function renderMoves(){ const list=P.moves; const btns=[document.getElementById('mv1'),document.getElementById('mv2'),document.getElementById('mv3'),document.getElementById('mv4')]; for(let i=0;i<4;i++){ const b=btns[i], m=list[i]; if(!m){ b.dataset.disabled='1'; b.querySelector('.label').textContent='—'; b.querySelector('.pp').textContent='PP —'; b.querySelector('.type').textContent='—'; b.classList.remove('t-red','t-blue','t-green'); continue; } const def=ensureMove(m.name); b.dataset.disabled = moveReady(m)?'0':'1'; b.querySelector('.label').textContent=m.name; b.querySelector('.pp').textContent=`PP ${m.pp}${def.cd?` • CD ${m.cd}`:''}`; const typ=def.type==='color'?P.color:(['red','blue','green'].includes(def.type)?def.type:'neutral'); b.querySelector('.type').textContent=def.text; b.classList.remove('t-red','t-blue','t-green'); if(typ==='red')b.classList.add('t-red'); else if(typ==='blue')b.classList.add('t-blue'); else if(typ==='green')b.classList.add('t-green'); b.onclick=()=>chooseMove(i); } }
+function startTurn(){ beginCooldowns(P); beginCooldowns(E); applyStartOfTurn(P); applyStartOfTurn(E); updateMeta(); setHPBars(); }
+function endCheck(){ if(E.hp<=0){ pushLog(`<strong>${E.name} est K.O. — Victoire !</strong>`); stageAdvance(); return true } if(P.hp<=0){ pushLog(`<strong>${P.name} est K.O. — Défaite…</strong>`); return true } return false }
+function stageAdvance(){ if(stage<10) stageSel.value=String(++stage); else { stageSel.value='1'; if(act<4) actSel.value=String(++act); } act=parseInt(actSel.value,10); stage=parseInt(stageSel.value,10); saveProgress(); }
+function damageCalc(att,def,mv){ const m=ensureMove(mv.name); const base=m.power; const stab=(m.type==='color'||m.type===att.color)?1.2:1.0; const adv=typeMult(m.type,(m.type==='color'?att.color:m.type),def.color); const crit=critRoll(att,m,adv); const atkStat=(m.kind==='phys')?att.atkBase*att.atkMod:att.spatkBase*att.spAtkMod; const defStat=(m.kind==='phys')?def.defBase*def.defMod:def.spdefBase*def.spDefMod; const rand=0.85+Math.random()*0.15; const scalar=atkStat/Math.max(10,defStat); const dmg=Math.floor(base*stab*adv*crit*scalar*rand); return {dmg:Math.max(1,dmg),adv,crit}; }
+function applyMove(att,def,mv){ const m=ensureMove(mv.name); if(m.acc>0 && !accRoll(m.acc,att,def)){ pushLog(`${att.name} rate ${mv.name} !`); return } if(m.kind==='status'){ const proc=(m.proc??100); const resist=(n)=>clamp((def.resists?.[n]??0),0,100); const passes=(n)=>chance(clamp(proc-resist(n),0,100)); switch(m.apply){ case 'burn': if(passes('burn')){ def.states.burn=Math.max(def.states.burn,3); pushLog(`${def.name} est brûlé !`) } else pushLog(`${def.name} résiste à la brûlure.`); break; case 'bleed': if(passes('bleed')){ def.states.bleed=Math.max(def.states.bleed,5); pushLog(`${def.name} saigne !`) } else pushLog(`${def.name} résiste au saignement.`); break; case 'slow': if(passes('slow')){ def.states.slow=Math.max(def.states.slow,3); pushLog(`${def.name} est ralenti !`) } else pushLog(`${def.name} résiste au ralentissement.`); break; case 'invis': att.states.invis=Math.max(att.states.invis,2); pushLog(`${att.name} devient quasi invisible !`); break; case 'devil': att.buffs.devil=Math.max(att.buffs.devil,3); pushLog(`${att.name} active Devil Trigger !`); break; case 'grav': def.buffs.grav=Math.max(def.buffs.grav,3); pushLog(`${def.name} est sous gravité accrue !`); break; default: if(mv.name==='Guard'){ att.guardThisTurn=true; pushLog(`${att.name} se protège !`) } if(mv.name==='Power Up'){ att.buffs.power=Math.max(att.buffs.power,3); pushLog(`${att.name} se renforce !`) } if(mv.name==='Heal'){ const h=Math.floor(att.hpMax*0.3); att.hp=Math.min(att.hpMax,att.hp+h); pushLog(`${att.name} récupère ${h} PV`) } } } else { const r=damageCalc(att,def,mv); let real=r.dmg; if(def.guardThisTurn) real=Math.floor(real*0.7); def.hp=clamp(def.hp-real,0,def.hpMax); pushLog(`${att.name} utilise ${mv.name} — ${real} dégâts${r.adv>1?' (AVANTAGE)':''}${r.crit>1?' (CRITIQUE)':''}.`); setHPBars(); } }
+function chooseMove(i){ const mv=P.moves[i]; if(!mv||!moveReady(mv)) return; doTurn(mv); }
+function doTurn(pMove){ const eIdx=chooseEnemyMove(), eMove=E.moves[eIdx]; const pm=ensureMove(pMove.name), em=ensureMove(eMove.name); const pSpeed=P.speedBase*P.speedMod+(pm.prio||0)*100; const eSpeed=E.speedBase*E.speedMod+(em.prio||0)*100; beginCooldowns(P); beginCooldowns(E); applyStartOfTurn(P); applyStartOfTurn(E); P.guardThisTurn=false; E.guardThisTurn=false; const first=(pSpeed===eSpeed)?(Math.random()<0.5?'P':'E'):(pSpeed>eSpeed?'P':'E'); const order=first==='P'?[['P',pMove],['E',eMove]]:[['E',eMove],['P',pMove]]; for(const [who,mv] of order){ if(endCheck()) break; const owner=(who==='P')?P:E; const inv=owner.moves.find(x=>x.name===mv.name); if(inv){ inv.pp=Math.max(0,inv.pp-1); inv.cd=Math.max(inv.cd,ensureMove(mv.name).cd||0); } if(who==='P') applyMove(P,E,mv); else applyMove(E,P,mv); if(endCheck()) break; } renderMoves(); }
+function chooseEnemyMove(){ const R=E.moves.map((m,i)=>({m,i,def:ensureMove(m.name)})).filter(x=>moveReady(x.m)); if(!R.length) return 0; for(const x of R){ if((x.def.power||0)>0){ const sim=damageCalc(E,P,x.m).dmg; if(sim>=P.hp) return x.i; } } const adv=R.filter(x=>{ const t=x.def.type==='color'?E.color:(['red','blue','green'].includes(x.def.type)?x.def.type:null); return t && ADV[t]===P.color; }); if(adv.length) return adv[Math.floor(Math.random()*adv.length)].i; const sts=R.filter(x=>x.def.kind==='status'); if(sts.length && Math.random()<0.5) return sts[Math.floor(Math.random()*sts.length)].i; R.sort((a,b)=>(b.def.power||0)-(a.def.power||0)); return R[0].i; }
 function saveProgress(){ localStorage.setItem(SAVEKEY, JSON.stringify({act,stage,playerId:ROSTER[playerSel.value]?.id})); }
-function loadProgress(){
-  const s = JSON.parse(localStorage.getItem(SAVEKEY)||'{}');
-  if(s.act) actSel.value = String(s.act);
-  if(s.stage) stageSel.value = String(s.stage);
-  if(s.playerId){
-    const idx = ROSTER.findIndex(x=>x.id===s.playerId);
-    if(idx>=0) playerSel.value = String(idx);
-  }
-  act = parseInt(actSel.value,10); stage = parseInt(stageSel.value,10);
-}
-
-/* ================== EVENTS UI ================== */
-startBtn.onclick = ()=>{ act=parseInt(actSel.value,10); stage=parseInt(stageSel.value,10); setupBattle(); saveProgress(); };
-resetBtn.onclick = ()=>{ localStorage.removeItem(SAVEKEY); actSel.value='1'; stageSel.value='1'; playerSel.value='0'; act=1; stage=1; log.innerHTML='Progression réinitialisée.'; };
-
-playerSel.onchange = ()=> saveProgress();
-actSel.onchange = ()=>{ act=parseInt(actSel.value,10); saveProgress(); };
-stageSel.onchange = ()=>{ stage=parseInt(stageSel.value,10); saveProgress(); };
-
-mButtons.forEach((b,idx)=> b.addEventListener('click',()=>{
-  const mv = P.moves[idx]; if(!mv || !moveReady(mv)) return;
-  doTurn(mv);
-}));
-
-/* ================== INIT ================== */
-(async function init(){
-  await loadRoster();
-  loadProgress();
-  // preview noms/HP vides jusqu’au lancement
-  const pBase = ROSTER[playerSel.value]; const eBase = genEnemy();
-  P = makeFighter(pBase); E = makeFighter(eBase);
-  setNames(); setHPBars(); renderMoves();
-  pushLog("Choisis tes paramètres puis clique Lancer.");
-})();
+function loadProgress(){ const s=JSON.parse(localStorage.getItem(SAVEKEY)||'{}'); if(s.act) actSel.value=String(s.act); if(s.stage) stageSel.value=String(s.stage); if(s.playerId){ const idx=ROSTER.findIndex(x=>x.id===s.playerId); if(idx>=0) playerSel.value=String(idx);} act=parseInt(actSel.value,10)||1; stage=parseInt(stageSel.value,10)||1; }
+startBtn.onclick=()=>{ act=parseInt(actSel.value,10)||1; stage=parseInt(stageSel.value,10)||1; setupBattle(); saveProgress(); };
+resetBtn.onclick=()=>{ localStorage.removeItem(SAVEKEY); actSel.value='1'; stageSel.value='1'; playerSel.value='0'; act=1; stage=1; log.innerHTML='Progression réinitialisée.'; };
+playerSel.onchange=()=>saveProgress(); actSel.onchange=()=>{ act=parseInt(actSel.value,10)||1; saveProgress(); }; stageSel.onchange=()=>{ stage=parseInt(stageSel.value,10)||1; saveProgress(); };
+(async function init(){ await loadRoster(); loadProgress(); const pBase=ROSTER[playerSel.value]||ROSTER[0]; const eBase=genEnemy(); P=makeFighter(pBase); E=makeFighter(eBase); setNames(); setHPBars(); renderMoves(); pushLog("Choisis tes paramètres puis clique Lancer."); })();
 </script>
 </body>
 </html>

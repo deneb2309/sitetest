@@ -1,48 +1,23 @@
+
 window.sharedAudio = (function(){
-  function userClickUnmute(audio){
-    const handler = ()=>{
-      try{
-        audio.muted = false;
-        if (audio.paused) audio.play().catch(()=>{});
-      }catch(e){}
-      window.removeEventListener('click', handler, {once:true});
-      window.removeEventListener('keydown', handler, {once:true});
+  function startAndRemember(audioEl){
+    try { audioEl.currentTime = 0; audioEl.play(); } catch(e){}
+    localStorage.setItem('musicPlaying','true');
+    localStorage.setItem('userInteracted','true');
+  }
+  function tryResume(audioEl){
+    const want = localStorage.getItem('musicPlaying')==='true';
+    const interacted = localStorage.getItem('userInteracted')==='true';
+    if(!want || !interacted) return;
+    const onInteract = () => {
+      audioEl.play().catch(()=>{});
+      window.removeEventListener('pointerdown', onInteract);
+      window.removeEventListener('keydown', onInteract);
     };
-    window.addEventListener('click', handler, {once:true});
-    window.addEventListener('keydown', handler, {once:true});
-  }
-
-  function tryResume(audio){
-    if (!audio) return;
-    const played = localStorage.getItem('musicPlaying') === 'true';
-    if (played){
-      audio.muted = false;
-      audio.play().catch(()=>{
-        audio.muted = true;
-        audio.play().catch(()=>{});
-        userClickUnmute(audio);
-      });
-    } else {
-      audio.muted = true;
-      try { audio.play().catch(()=>{}); } catch(e){}
-      userClickUnmute(audio);
-    }
-  }
-
-  function startAndRemember(audio){
-    if (!audio) return;
-    audio.muted = false;
-    audio.play().then(()=>{
-      localStorage.setItem('musicPlaying','true');
-      localStorage.setItem('userInteracted','true');
-    }).catch(()=>{
-      audio.muted = true;
-      audio.play().catch(()=>{});
-      userClickUnmute(audio);
-      localStorage.setItem('musicPlaying','true');
-      localStorage.setItem('userInteracted','true');
+    audioEl.play().catch(()=> {
+      window.addEventListener('pointerdown', onInteract, {once:true});
+      window.addEventListener('keydown', onInteract, {once:true});
     });
   }
-
-  return { tryResume, startAndRemember };
+  return { startAndRemember, tryResume };
 })();
