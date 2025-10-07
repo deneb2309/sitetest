@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>FIGHTSHIFT — Mode Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <style>
+    .arena{max-width:980px;margin:0 auto;background:var(--panel);border:2px solid var(--ring);padding:20px;border-radius:16px;box-shadow:0 0 10px var(--ring2)}
+    .row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+    .col{flex:1;min-width:280px;background:rgba(0,0,0,.3);padding:14px;border-radius:12px;border:1px solid rgba(0,255,255,.15)}
+    .hpbar{height:16px;background:#111;border-radius:10px;overflow:hidden;border:1px solid #0ff}
+    .hpfill{height:100%;width:100%}
+    .hp-red{background:linear-gradient(90deg,#ff416c,#ff4b2b)}
+    .hp-blue{background:linear-gradient(90deg,#00c6ff,#0072ff)}
+    .hp-green{background:linear-gradient(90deg,#00ff7a,#00c853)}
+    .log{min-height:120px;text-align:left;background:rgba(0,0,0,.25);padding:10px;border-radius:10px;border:1px solid rgba(0,255,255,.1);max-height:260px;overflow:auto}
+    select{padding:8px;border:2px solid var(--neon);background:#000;color:var(--neon);border-radius:8px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .muted{opacity:.8;font-size:11px}
+    .boss{color:#ffb703}
+    .progress{height:8px;background:#111;border:1px solid var(--ring);border-radius:8px;overflow:hidden}
+    .progress > div{height:100%;background:linear-gradient(90deg,var(--neon),#fff)}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="brand">FIGHTSHIFT</div>
+      <nav class="nav">
+        <button class="btn btn-ghost" onclick="location.href='index.html'">Menu</button>
+        <button class="btn btn-ghost" onclick="location.href='roster_static.html'">Roster</button>
+        <button class="btn btn-ghost" onclick="location.href='rules.html'">Règles</button>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Mode Arcade</h1>
+      <div class="arena">
+        <div class="row">
+          <div class="col">
+            <h2>Paramètres</h2>
+            <div class="grid-2">
+              <label>Acte
+                <select id="actSel">
+                  <option value="1">Acte I</option>
+                  <option value="2">Acte II</option>
+                  <option value="3">Acte III</option>
+                  <option value="4">Acte IV</option>
+                </select>
+              </label>
+              <label>Stage
+                <select id="stageSel">
+                  <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                  <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                  <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                  <option value="10">10 (Boss Rush)</option>
+                </select>
+              </label>
+            </div>
+            <label style="display:block;margin-top:8px">Personnage
+              <select id="playerSel"></select>
+            </label>
+            <div id="pInfo" class="muted" style="margin-top:6px"></div>
+
+            <div style="margin-top:12px">
+              <button class="btn" id="continueBtn">▶️ Continuer</button>
+              <button class="btn" id="startBtn">🎮 Lancer</button>
+              <button class="btn btn-ghost" id="resetBtn">↺ Reset</button>
+            </div>
+
+            <div style="margin-top:12px">
+              <div class="muted">Progression Acte <span id="pAct">1</span> — Stage <span id="pStage">1</span>/10</div>
+              <div class="progress"><div id="pProg" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <h2>Adversaire</h2>
+            <div id="eHeader" class="muted">—</div>
+            <div class="hpbar" style="margin:8px 0 6px"><div id="eHP" class="hpfill"></div></div>
+            <div class="muted" id="eShort">—</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <h2>Toi</h2>
+            <div id="pHeader" class="muted">—</div>
+            <div class="hpbar" style="margin:8px 0 6px"><div id="pHP" class="hpfill"></div></div>
+            <div class="muted" id="pShort">—</div>
+          </div>
+          <div class="col">
+            <h2>Combat</h2>
+            <div class="log" id="log"></div>
+            <div style="margin-top:8px">
+              <button class="btn" id="nextBtn" disabled>⏭️ Tour suivant</button>
+              <button class="btn btn-ghost" id="skipBtn" disabled>⏩ Skip (auto)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Musique -->
+  <audio id="bg-music" loop><source src="techno_syndrome.mp3" type="audio/mpeg" /></audio>
+
+  <!-- (Optionnel) SFX -->
+  <!-- <audio id="hit" src="sfx/hit.wav" preload="auto"></audio>
+  <audio id="ko"  src="sfx/ko.wav" preload="auto"></audio> -->
+
+  <script src="shared-audio.js"></script>
+  <script>
+  // === Data ===
+  const ADV = { red:'green', green:'blue', blue:'red' };
+  const COLORNAME = c => c==='red'?'ROUGE':(c==='blue'?'BLEU':'VERT');
+  const HPCLASS = c => c==='red'?'hp-red':(c==='blue'?'hp-blue':'hp-green');
+
+  const FALLBACK_ROSTER = [
+    {"id":"arthur","name":"Arthur","color":"red","hp_max":600,"short":"Tank offensif maniant le feu ; renvoie/contre.","abilities":["Ataraxia","Scorching Hands","God's Judgment"]},
+    {"id":"cahara","name":"Cahara","color":"blue","hp_max":450,"short":"Magie du sang : soins/rez/terrain.","abilities":["Blood Geyser","Blood Rain","Decem Milia"]},
+    {"id":"lazarus","name":"Lazarus","color":"green","hp_max":600,"short":"Psychique/exécuteur : contrôle/exécutions.","abilities":["Heaven Pierce Her","Raw, Stained, Brutal"]},
+    {"id":"signus","name":"Signus","color":"blue","hp_max":550,"short":"Ombres et invocations abyssales.","abilities":["Heart of the Deep","Void Dragon"]},
+    {"id":"marco","name":"Marco","color":"green","hp_max":500,"short":"Colosse de pierre, AoE et formes.","abilities":["Nano Rocks","Rayon Noir"]},
+    {"id":"jemal","name":"Jemal","color":"green","hp_max":600,"short":"Musique/temps : clones, buffs, slow.","abilities":["Echo Temporel","Slow"]},
+    {"id":"kagenami","name":"Kagenami","color":"blue","hp_max":550,"short":"Assassin furtif : backstab/invis.","abilities":["Backstab","Invisibility"]},
+    {"id":"samira","name":"Samira","color":"red","hp_max":400,"short":"Demi-démon : guns, transfo, burst.","abilities":["Charging Slash","Devil Trigger"]},
+    {"id":"sam","name":"S.A.M.","color":"green","hp_max":850,"short":"Construct : gravité, provocation, tank.","abilities":["Gravity Shift","Counter"]},
+    {"id":"burnice","name":"Burnice","color":"red","hp_max":500,"short":"Pyromane : anomalies/flaques.","abilities":["Surcharge Pyrique","Enfer Glorieux"]}
+  ];
+
+  const SAVEKEY = 'FIGHTSHIFT_ARCADE_V1';
+
+  // === State ===
+  let ROSTER = [];
+  let player = null, enemy = null;
+  let pHPv = 0, eHPv = 0;
+  let act = 1, stage = 1;
+  let autoSkip = false;
+
+  // === UI refs ===
+  const actSel = document.getElementById('actSel');
+  const stageSel = document.getElementById('stageSel');
+  const playerSel = document.getElementById('playerSel');
+  const pInfo = document.getElementById('pInfo');
+  const pHeader = document.getElementById('pHeader');
+  const eHeader = document.getElementById('eHeader');
+  const pShort = document.getElementById('pShort');
+  const eShort = document.getElementById('eShort');
+  const pHP = document.getElementById('pHP');
+  const eHP = document.getElementById('eHP');
+  const log = document.getElementById('log');
+  const startBtn = document.getElementById('startBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  const continueBtn = document.getElementById('continueBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const pAct = document.getElementById('pAct');
+  const pStage = document.getElementById('pStage');
+  const pProg = document.getElementById('pProg');
+
+  // === Audio bg ===
+  window.sharedAudio.tryResume(document.getElementById('bg-music'));
+
+  // === Save/Load ===
+  function saveProgress(){
+    localStorage.setItem(SAVEKEY, JSON.stringify({ act, stage, playerId: player?.id || null }));
+    updateProgressUI();
+  }
+  function loadProgress(){
+    try{
+      const s = JSON.parse(localStorage.getItem(SAVEKEY) || '{}');
+      if(s.act) act = s.act;
+      if(s.stage) stage = s.stage;
+      if(s.playerId && ROSTER.length){
+        const idx = ROSTER.findIndex(x=>x.id===s.playerId);
+        if(idx>=0) playerSel.value = String(idx);
+      }
+      actSel.value = String(act);
+      stageSel.value = String(stage);
+      updateProgressUI();
+    }catch(e){}
+  }
+  function resetProgress(){
+    localStorage.removeItem(SAVEKEY);
+    act = 1; stage = 1;
+    actSel.value = '1'; stageSel.value = '1';
+    updateProgressUI();
+  }
+  function updateProgressUI(){
+    pAct.textContent = act;
+    pStage.textContent = stage;
+    pProg.style.width = (Math.min(stage-1,9)/9*100)+'%';
+  }
+
+  // === Roster load ===
+  async function loadRoster(){
+    try{
+      const res = await fetch('roster.json', {cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      ROSTER = await res.json();
+    }catch(_){
+      ROSTER = FALLBACK_ROSTER;
+    }
+    playerSel.innerHTML = ROSTER.map((c,i)=>`<option value="${i}">${c.name} — ${COLORNAME(c.color)}</option>`).join('');
+    if(localStorage.getItem(SAVEKEY)) loadProgress();
+    updatePlayerInfo();
+    rollEnemy(); // preview
+  }
+
+  function updatePlayerInfo(){
+    const p = ROSTER[playerSel.value];
+    if(!p) return;
+    pInfo.textContent = `${p.name} [${COLORNAME(p.color)}] — PV ${p.hp_max}`;
+    pHeader.textContent = `${p.name} [${COLORNAME(p.color)}] — PV ${p.hp_max}`;
+    pShort.textContent = p.short || '';
+    pHP.className = 'hpfill '+HPCLASS(p.color);
+    pHP.style.width = '100%';
+  }
+
+  function rollEnemy(){
+    // génère un ennemi en fonction de l'acte/stage (un peu plus tanky sur les stages hauts)
+    const pool = ROSTER;
+    const e = JSON.parse(JSON.stringify(pool[Math.floor(Math.random()*pool.length)]));
+    const tankBonus = Math.floor((act-1)*40 + (stage-1)*10);
+    e.hp_max = e.hp_max + tankBonus;
+    enemy = e;
+    eHeader.innerHTML = `${e.name} ${stage==10?'<span class="boss">(BOSS)</span>':''} [${COLORNAME(e.color)}] — PV ${e.hp_max}`;
+    eShort.textContent = e.short || '';
+    eHP.className = 'hpfill '+HPCLASS(e.color);
+    eHP.style.width = '100%';
+  }
+
+  function startFight(){
+    player = JSON.parse(JSON.stringify(ROSTER[playerSel.value]));
+    pHPv = player.hp_max; eHPv = enemy.hp_max;
+    log.innerHTML = '';
+    nextBtn.disabled = false;
+    skipBtn.disabled = false;
+    // save current selection as progress player
+    saveProgress();
+  }
+
+  function dmgBase(pwr=120){ return Math.floor(pwr * (0.85 + Math.random()*0.3)); }
+  function mult(att,def){ return ADV[att]===def ? 1.5 : 1.0; }
+
+  function append(text){ log.innerHTML += `<p>${text}</p>`; log.scrollTop = log.scrollHeight; }
+
+  function turnOnce(){
+    if(pHPv<=0 || eHPv<=0){ nextBtn.disabled = true; skipBtn.disabled = true; return; }
+    const pMul = mult(player.color, enemy.color);
+    const eMul = mult(enemy.color, player.color);
+    const pDmg = Math.floor(dmgBase(120) * pMul);
+    eHPv = Math.max(0, eHPv - pDmg);
+    append(`▶ ${player.name} frappe pour ${pDmg}${pMul>1?' (AVANTAGE)':''}.`);
+    eHP.style.width = Math.round(100*eHPv/enemy.hp_max)+'%';
+    if(eHPv<=0){ append(`<strong>${enemy.name} est K.O. — Victoire !</strong>`); endFight(true); return; }
+
+    const eDmg = Math.floor(dmgBase(120) * eMul);
+    pHPv = Math.max(0, pHPv - eDmg);
+    append(`${enemy.name} riposte pour ${eDmg}${eMul>1?' (AVANTAGE)':''}.`);
+    pHP.style.width = Math.round(100*pHPv/player.hp_max)+'%';
+    if(pHPv<=0){ append(`<strong>${player.name} est K.O. — Défaite…</strong>`); endFight(false); return; }
+  }
+
+  function endFight(victory){
+    nextBtn.disabled = true;
+    skipBtn.disabled = true;
+    if(victory){
+      // avance la progression
+      if(stage < 10){ stage++; }
+      else {
+        // fin acte → passe à l’acte suivant (boucle sur 4)
+        stage = 1;
+        act = Math.min(4, act+1);
+      }
+      actSel.value = String(act);
+      stageSel.value = String(stage);
+      updateProgressUI();
+      saveProgress();
+      append(`<em>Progression mise à jour : Acte ${act} — Stage ${stage}.</em>`);
+    } else {
+      append(`<em>Réessaie le stage, ou change de perso.</em>`);
+    }
+  }
+
+  function begin(){
+    act = parseInt(actSel.value,10);
+    stage = parseInt(stageSel.value,10);
+    rollEnemy();
+    startFight();
+  }
+
+  // === Events ===
+  playerSel.addEventListener('change', ()=>{ updatePlayerInfo(); saveProgress(); });
+  actSel.addEventListener('change', ()=>{ act = parseInt(actSel.value,10); updateProgressUI(); saveProgress(); rollEnemy(); });
+  stageSel.addEventListener('change', ()=>{ stage = parseInt(stageSel.value,10); updateProgressUI(); saveProgress(); rollEnemy(); });
+  startBtn.addEventListener('click', begin);
+  nextBtn.addEventListener('click', turnOnce);
+  skipBtn.addEventListener('click', ()=>{
+    autoSkip = true;
+    nextBtn.disabled = true;
+    skipBtn.disabled = true;
+    (function loop(){
+      if(pHPv<=0 || eHPv<=0) return;
+      turnOnce();
+      if(pHPv>0 && eHPv>0) setTimeout(loop, 500);
+    })();
+  });
+  continueBtn.addEventListener('click', ()=>{
+    loadProgress();
+    rollEnemy();
+    startFight();
+  });
+  resetBtn.addEventListener('click', ()=>{ resetProgress(); rollEnemy(); log.innerHTML=''; });
+
+  // init
+  loadRoster();
+  </script>
+</body>
+</html>
